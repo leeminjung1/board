@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <a href="/"><h3 class="text-muted">Board</h3></a>
+    </div>
+    <div>
+        <li><span th:text="${user.username}"></span></li>
+        <li><span th:text="${user.createdDate}"></span></li>
+        <li><span th:text="${user.lastPasswordChanged}"></span></li>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

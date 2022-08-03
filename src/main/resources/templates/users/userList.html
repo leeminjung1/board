@@ -1,21 +1,32 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Hello, world!</title>
-</head>
+<head th:replace="fragments/header :: header" />
 <body>
 <div class="container">
-    <div class="header">
-        <a href="/"><h3 class="text-muted">Board</h3></a>
-    </div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div>
-        <li><span th:text="${user.username}"></span></li>
-        <li><span th:text="${user.createdDate}"></span></li>
-        <li><span th:text="${user.lastPasswordChanged}"></span></li>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>username</th>
+                <th>email</th>
+                <th>createdDate</th>
+                <th>lastPasswordChanged</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.createdDate}"></td>
+                <td th:text="${user.lastPasswordChanged}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+    <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>
 </html>

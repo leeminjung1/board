@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Hello</title>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-Hello World : <span th:text="Thymeleaf">HTML</span>
+<div th:replace="fragments/bodyHeader :: bodyHeader" />
+<aside>
+    <div class="login">
+        <a href="/login" class="button login">로그인</a>
+        <a href="/register" class="button register">회원가입</a>
+        <p class="find">
+            <a href="/forgot">아이디/비밀번호 찾기</a>
+        </p>
+    </div>
+</aside>
+<section class="init">
+    <div>
+    </div>
+</section>
 </body>
 </html>

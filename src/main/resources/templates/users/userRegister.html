@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"  />
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeader" />
+<div class="container col-xl-10 col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-lg-5 py-5">
+        <form class="p-4 p-md-5 border rounded-3 bg-light" action="/register" method="post" th:object="${registerDto}">
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" th:field="*{email}" placeholder="Email@example.com">
+                <label th:for="email">Email</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" th:field="*{username}" placeholder="Username">
+                <label th:for="username">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" th:field="*{password}" placeholder="Password">
+                <label th:for="password">Password</label>
+            </div>
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">confirm</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

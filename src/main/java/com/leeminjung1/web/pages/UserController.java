@@ -1,5 +1,6 @@
 package com.leeminjung1.web.pages;
 
+import com.leeminjung1.domain.application.dtos.LoginDto;
 import com.leeminjung1.domain.application.dtos.RegisterDto;
 import com.leeminjung1.domain.application.impl.UserServiceImpl;
 import com.leeminjung1.domain.model.user.User;
@@ -20,17 +21,27 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
+    @GetMapping("/login")
+    public String login() {
+        return "users/userLogin";
+    }
+
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("registerDto", new RegisterDto());
+        return "users/userRegister";
+    }
+
 //    @PostMapping("/login")
-//    public String login(Logindto dto) {
-//        userService.register(dto);
+//    public String login(LoginDto dto) {
+//
 //        return "redirect:/";
 //    }
 
     @PostMapping("/register")
     public String register(RegisterDto dto) {
         userService.register(dto);
-
-        return "redirect:/";
+        return "home";
     }
 
 

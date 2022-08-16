@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface UserService {
     User findById(long userId);
+    User findByUsername(String username);
     void register(RegisterDto dto);
     List<User> findUsers();
     void updatePassword(Long id, String password);

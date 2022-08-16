@@ -16,16 +16,4 @@ public class MainController {
     public String hello() {
         return "home";
     }
-
-    @GetMapping("/login")
-    public String login() {
-        return "users/userLogin";
-    }
-
-    @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("registerDto", new RegisterDto());
-        return "users/userRegister";
-    }
-
 }

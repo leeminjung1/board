@@ -1,14 +1,14 @@
 package com.leeminjung1.domain.application;
 
 import com.leeminjung1.domain.application.dtos.RegisterDto;
-import com.leeminjung1.domain.model.user.User;
+import com.leeminjung1.domain.model.member.Member;
 
 import java.util.List;
 
-public interface UserService {
-    User findById(long userId);
-    User findByUsername(String username);
+public interface MemberService {
+    Member findById(long userId);
+    Member findByUsername(String username);
     void register(RegisterDto dto);
-    List<User> findUsers();
+    List<Member> findUsers();
     void updatePassword(Long id, String password);
 }

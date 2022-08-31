@@ -1,16 +1,14 @@
 package com.leeminjung1.web.pages;
 
-import com.leeminjung1.domain.application.dtos.LoginDto;
 import com.leeminjung1.domain.application.dtos.RegisterDto;
-import com.leeminjung1.domain.application.impl.UserServiceImpl;
-import com.leeminjung1.domain.model.user.User;
+import com.leeminjung1.domain.application.impl.MemberServiceImpl;
+import com.leeminjung1.domain.model.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ import java.util.List;
 @Slf4j
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final MemberServiceImpl userService;
 
     @GetMapping("/login")
     public String login() {
@@ -45,10 +43,10 @@ public class UserController {
     }
 
 
-    @GetMapping("/users")
+    @GetMapping("/members")
     public String list(Model model) {
-        List<User> users = userService.findUsers();
-        model.addAttribute("users", users);
+        List<Member> members = userService.findUsers();
+        model.addAttribute("members", members);
         return "users/userList";
     }
 }

@@ -16,12 +16,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.id}"></td>
-                <td th:text="${user.username}"></td>
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.createdDate}"></td>
-                <td th:text="${user.lastPasswordChanged}"></td>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.username}"></td>
+                <td th:text="${member.email}"></td>
+                <td th:text="${member.createdDate}"></td>
+                <td th:text="${member.lastPasswordChanged}"></td>
             </tr>
             </tbody>
         </table>

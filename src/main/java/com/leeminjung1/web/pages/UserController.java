@@ -42,7 +42,6 @@ public class UserController {
         return "home";
     }
 
-
     @GetMapping("/members")
     public String list(Model model) {
         List<Member> members = userService.findUsers();

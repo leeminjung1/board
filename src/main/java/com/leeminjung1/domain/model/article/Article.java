@@ -36,8 +36,8 @@ public class Article {
     private List<Comment> comments = new ArrayList<>();
 
     private LocalDateTime createdAt;
-    private Integer view_count;
-    private Integer vote_count;
+    private Integer viewCount;
+    private Integer voteCount;
 
     @OneToMany(mappedBy = "article")
     private List<File> files = new ArrayList<>();

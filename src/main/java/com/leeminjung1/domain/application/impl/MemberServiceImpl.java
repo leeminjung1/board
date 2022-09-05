@@ -3,6 +3,8 @@ package com.leeminjung1.domain.application.impl;
 import com.leeminjung1.domain.application.MemberService;
 import com.leeminjung1.domain.application.dtos.RegisterDto;
 import com.leeminjung1.domain.model.member.Member;
+import com.leeminjung1.domain.model.member.Role;
+import com.leeminjung1.domain.model.member.RoleName;
 import com.leeminjung1.infrastructure.repository.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,23 +20,23 @@ public class MemberServiceImpl implements MemberService {
 
     private final JpaMemberRepository memberRepository;
 
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+
+
     public void register(RegisterDto dto) {
-        Member user = new Member();
-        user.setEmail(dto.getEmail());
-        user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword());
-        user.setCreatedDate(LocalDateTime.now());
-        user.setLastPasswordChanged(LocalDateTime.now());
-        memberRepository.save(user);
+        Member member = Member.builder()
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .build();
+
+        memberRepository.save(member);
     }
 
     public Member findById(long userId) {
         return memberRepository.findById(userId). get();
-    }
-
-    @Override
-    public Member findByUsername(String username) {
-        return memberRepository.findByUsername(username);
     }
 
     public List<Member> findUsers() {

@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface ArticleService {
     Optional<Article> findById(long articleId);
-    List<Article> findArticles();
+    List<Article> findAllArticles();
+
+    List<Article> findArticlesByCategory(Long categoryId);
 }

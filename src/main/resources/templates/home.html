@@ -6,24 +6,27 @@
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeader" />
 <div>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
-    <h2>hihihi</h2>
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>게시판명</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${categories}">
+                <td>
+                    <a href="#"
+                       th:href="@{/{categoryId} (categoryId=${category.id})}"
+                       th:text="${category.name}">
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
 </div>
 </body>
 </html>

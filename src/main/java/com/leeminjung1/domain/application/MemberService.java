@@ -6,6 +6,7 @@ import com.leeminjung1.domain.model.member.Member;
 import java.util.List;
 
 public interface MemberService {
-    void register(RegisterDto dto);
+    void registerAdmin(RegisterDto dto);
+    void registerUser(RegisterDto dto);
     List<Member> findUsers();
 }

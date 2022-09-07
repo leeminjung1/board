@@ -28,9 +28,9 @@ public class Article {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
-    private Member author;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "author_id")
+//    private Member author;
 
     @OneToMany(mappedBy = "article")
     private List<Comment> comments = new ArrayList<>();

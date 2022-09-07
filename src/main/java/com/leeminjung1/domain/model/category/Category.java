@@ -2,6 +2,7 @@ package com.leeminjung1.domain.model.category;
 
 import com.leeminjung1.domain.model.article.Article;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "category")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +31,9 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Article> articles = new ArrayList<>();
+
+    public Category (Category parent, String name) {
+        this.parent = parent;
+        this.name = name;
+    }
 }

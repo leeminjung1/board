@@ -3,14 +3,15 @@ package com.leeminjung1.domain.application.impl;
 import com.leeminjung1.domain.application.MemberService;
 import com.leeminjung1.domain.application.dtos.RegisterDto;
 import com.leeminjung1.domain.model.member.Member;
-import com.leeminjung1.domain.model.member.Role;
-import com.leeminjung1.domain.model.member.RoleName;
-import com.leeminjung1.infrastructure.repository.JpaMemberRepository;
+import com.leeminjung1.infrastructure.repository.MemberRepository;
+import com.leeminjung1.infrastructure.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -18,21 +19,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-    private final JpaMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public void save(Member member) {
-        memberRepository.save(member);
+    public void registerAdmin(RegisterDto dto) {
+        Member user = Member.builder()
+                .username(dto.getUsername())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .email(dto.getEmail()).build();
+        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_ADMIN")));
+
+        memberRepository.save(user);
     }
 
-
-    public void register(RegisterDto dto) {
-        Member member = Member.builder()
+    public void registerUser(RegisterDto dto) {
+        Member user = Member.builder()
                 .username(dto.getUsername())
-                .email(dto.getEmail())
-                .password(dto.getPassword())
-                .build();
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .email(dto.getEmail()).build();
+        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
 
-        memberRepository.save(member);
+        memberRepository.save(user);
     }
 
     public Member findById(long userId) {

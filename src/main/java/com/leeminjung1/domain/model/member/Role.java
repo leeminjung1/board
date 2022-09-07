@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -16,14 +17,28 @@ public class Role {
 
     @Id
     @GeneratedValue
-    @Column(name = "role_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Enumerated(value = EnumType.STRING)
+    /*@Enumerated(value = EnumType.STRING)
     @Column(name = "role_name")
-    private RoleName roleName;
+    private RoleName roleName;*/
 
-    public Role(RoleName roleName) {
-        this.roleName = roleName;
+    private String name;
+    @ManyToMany(mappedBy = "roles")
+    private Collection<Member> members;
+
+    @ManyToMany
+    @JoinTable(
+            name = "roles_privileges",
+            joinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "privilege_id", referencedColumnName = "id"))
+    private Collection<Privilege> privileges;
+
+
+    public Role(String name) {
+        this.name = name;
     }
 }

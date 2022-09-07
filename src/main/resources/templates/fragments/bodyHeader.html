@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <header th:fragment="bodyHeader" class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start py-3 mb-4 bg-light bg-opacity-75 border-bottom sticky-top">
     <a href="/" class="d-flex align-items-center ms-2 mb-2 mb-md-0 text-dark text-decoration-none">
         hi
@@ -10,8 +11,11 @@
         <li><a href="/articles" class="nav-link px-2 link-dark">Articles</a></li>
     </ul>
 
-    <div class="me-2">
+    <div sec:authorize="isAnonymous()" class="me-2">
         <button type="button" onclick="location.href='/login'" class="btn btn-outline-primary me-2">Login</button>
         <button type="button" onclick="location.href='/register'" class="btn btn-primary">Sign-up</button>
     </div>
+    <form sec:authorize="isAuthenticated()" method="post" th:action="@{/logout}" class="me-2">
+        <button class="btn btn-outline-primary me-2" type="submit">Logout</button>
+    </form>
 </header>

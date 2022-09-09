@@ -57,4 +57,8 @@ public class MemberServiceImpl implements MemberService {
         member.setLastPasswordChanged(LocalDateTime.now());
     }
 
+    public Member findByUsername(String username) {
+        Member member = memberRepository.findByUsername(username).get();
+        return member;
+    }
 }

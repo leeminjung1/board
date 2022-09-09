@@ -36,6 +36,9 @@ public class Member {
     @Column(name = "last_password_changed", nullable = false)
     private LocalDateTime lastPasswordChanged;
 
+    @Column(name = "imgUrl")
+    private String imgUrl;
+
     /*@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private Collection<MemberRole> memberRoles;*/
 
@@ -48,8 +51,8 @@ public class Member {
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
-//    @OneToMany(mappedBy = "author")
-//    private Collection<Article> articles;
+    @OneToMany(mappedBy = "author")
+    private Collection<Article> articles;
 
     @Builder
     public Member(String username, String email, String password) {

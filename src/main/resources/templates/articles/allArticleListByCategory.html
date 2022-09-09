@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
+        <div class="mb-2 p-4 bg-primary bg-opacity-10 rounded text-center">
+            <h3 th:text="${category.name}"></h3>
+        </div>
+        <div>
+            <button type="button" th:onclick="|location.href='@{/{categoryId}/new(categoryId=${category.id})}'|" class="btn btn-primary">글쓰기</button>
+        </div>
+        <div id="article_list_area">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>title</th>
+                    <th>author</th>
+                    <th>created at</th>
+                    <th>view count</th>
+                    <th>vote count</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="article : ${articles}">
+                    <td th:text="${article.id}"></td>
+                    <td>
+                        <a href="#"
+                           th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}"
+                           th:text="${article.title}"></a>
+                    </td>
+                    <td th:text="${article.author?.username}"></td>
+                    <td th:text="${article.createdAt}"></td>
+                    <td th:text="${article.viewCount}"></td>
+                    <td th:text="${article.voteCount}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

@@ -34,7 +34,7 @@ public class BackedLoginService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Member member = memberRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));;
+        Member member = memberRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         if (member == null) {
             return new org.springframework.security.core.userdetails.User(
                     " ", " ", true, true, true, true,
@@ -43,7 +43,7 @@ public class BackedLoginService implements UserDetailsService {
         }
 
         return new org.springframework.security.core.userdetails.User(
-                member.getEmail(), member.getPassword(), getAuthorities(member.getRoles()));
+                member.getUsername(), member.getPassword(), getAuthorities(member.getRoles()));
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(

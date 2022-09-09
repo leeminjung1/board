@@ -4,9 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<div th:replace="fragments/bodyHeader :: bodyHeader" />
 <div>
-    <div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
         <table>
             <thead>
             <tr>
@@ -25,7 +25,6 @@
             </tbody>
         </table>
     </div>
-
     <div th:replace="fragments/footer :: footer" />
 </div>
 </body>

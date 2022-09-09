@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
+        <div id="title_area">
+            <h3>전체글보기</h3>
+        </div>
+        <div id="article_list_area">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>category</th>
+                    <th>title</th>
+                    <th>author</th>
+                    <th>created at</th>
+                    <th>view count</th>
+                    <th>vote count</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="article : ${articles}">
+                    <td>
+                        <a href="#"
+                           th:href="@{/{categoryId}/ (categoryId=${article.category?.id})}"
+                           th:text="${article.category?.name}"></a>
+                    </td>
+                    <td>
+                        <a href="#"
+                           th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}"
+                           th:text="${article.title}"></a>
+                    </td>
+                    <td th:text="${article.author?.username}"></td>
+                    <td th:text="${article.createdAt}"></td>
+                    <td th:text="${article.viewCount}"></td>
+                    <td th:text="${article.voteCount}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

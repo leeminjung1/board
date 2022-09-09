@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ArticleService {
-    Optional<Article> findById(long articleId);
+    Optional<Article> findArticleById(long articleId);
     List<Article> findAllArticles();
-
     List<Article> findArticlesByCategory(Long categoryId);
+    void save(Article article);
 }

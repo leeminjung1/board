@@ -1,6 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header" />
+<script>
+  tinymce.init({
+    selector: '#content',
+    height: 500
+  });
+</script>
 <body>
 <div>
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
@@ -10,18 +16,22 @@
                th:href="@{/{categoryId}/ (categoryId=${category.id})}"
                th:text="${category.name}"></a>
         </div>
-        <form method="post" th:action="@{/{categoryId}/new (categoryId=${category.id})}" th:object="${article}">
-            <div>
-                <div>
-                    <label for="title">제목</label>
-                    <input type="text" id="title" placeholder="제목을 입력해주세요." th:field="*{title}">
+        <div class="mt-2">
+            <h3>글쓰기</h3>
+        </div>
+        <form class="my-5" method="post" th:action="@{/{categoryId}/new (categoryId=${category.id})}" th:object="${article}">
+            <div class="row row-cols-1 gap-4">
+                <div class="col">
+                    <label class="form-label" for="title">제목</label>
+                    <input class="form-control" type="text" id="title" placeholder="제목을 입력해주세요." th:field="*{title}">
                 </div>
-                <div>
-                    <label for="content">내용</label>
-                    <input type="text" id="content" placeholder="내용을 입력해주세요." th:field="*{content}">
+                <div class="col">
+                    <textarea id="content" th:field="*{content}" placeholder="내용을 입력해주세요."></textarea>
                 </div>
             </div>
-            <input type="submit" value="제출">
+            <div class="mt-5 d-flex gap-3 justify-content-end">
+                <button type="submit" class="btn btn-primary">등록</button>
+            </div>
         </form>
     </div>
     <div th:replace="fragments/footer :: footer" />

@@ -1,5 +1,6 @@
 package com.leeminjung1.domain.model.member;
 
+import com.leeminjung1.domain.application.dtos.UpdateMemberDto;
 import com.leeminjung1.domain.model.article.Article;
 import lombok.*;
 
@@ -61,5 +62,16 @@ public class Member {
         this.password = password;
         this.createdDate = LocalDateTime.now();
         this.lastPasswordChanged = LocalDateTime.now();
+    }
+
+    public void updateMember(UpdateMemberDto dto) {
+        this.username = dto.getUsername();
+        this.email = dto.getEmail();
+        if (dto.getPassword() != null) {
+            this.password = dto.getPassword();
+        }
+        if (dto.getImgUrl() != null) {
+            this.imgUrl = dto.getImgUrl();
+        }
     }
 }

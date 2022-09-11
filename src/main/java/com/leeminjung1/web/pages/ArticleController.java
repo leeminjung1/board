@@ -1,11 +1,13 @@
 package com.leeminjung1.web.pages;
 
 import com.leeminjung1.domain.application.ArticleService;
+import com.leeminjung1.domain.application.dtos.ArticleListDto;
 import com.leeminjung1.domain.application.impl.ArticleServiceImpl;
 import com.leeminjung1.domain.application.impl.MemberServiceImpl;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.domain.model.member.Member;
+import com.leeminjung1.infrastructure.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +33,7 @@ public class ArticleController {
 
     @GetMapping("/{categoryId}")
     public String articleListByCategory(@PathVariable("categoryId") Long categoryId, Model model) {
-        List<Article> articles = articleService.findArticlesByCategory(categoryId);
+        List<ArticleListDto> articles = articleService.findArticlesByCategory(categoryId);
         model.addAttribute("articles", articles);
         Category category = articleService.findCategoryByCategoryId(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리 입니다."));
@@ -40,7 +43,7 @@ public class ArticleController {
 
     @GetMapping("/articles")
     public String allList(Model model) {
-        List<Article> articles = articleService.findAllArticles();
+        List<ArticleListDto> articles = articleService.findAllArticles();
         model.addAttribute("articles", articles);
         return "articles/allArticleList";
     }
@@ -52,6 +55,7 @@ public class ArticleController {
         Article article = articleService.findArticleById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
         model.addAttribute("article", article);
+        model.addAttribute("categoryId", categoryId);
         return "articles/article";
     }
 
@@ -69,7 +73,6 @@ public class ArticleController {
     public String submitNewArticle(@ModelAttribute("article") Article article,
                                    @PathVariable("categoryId") Long categoryId,
                                    @AuthenticationPrincipal User user) {
-        log.debug(user.getUsername());
         Member member = memberService.findByUsername(user.getUsername());
         Category category = articleService.findCategoryByCategoryId(categoryId).get();
         Article newArticle = new Article(article.getTitle(), article.getContent(), category, member);

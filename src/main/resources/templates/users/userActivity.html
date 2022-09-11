@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
+        <div class="d-flex">
+            <div class="w-100">
+                <div class="overflow-hidden border rounded">
+                    <div class="my-5 mx-4 d-flex align-items-center">
+
+                        <img th:src="'/images/' + ${member.imgUrl}"
+                             alt="프로필 사진"
+                             width="64"
+                             height="64"
+                             th:if="${member.imgUrl != null}" />
+                        <div class="ms-3 fs-4 fw-bold" th:text="${member.username}" />
+                    </div>
+                    <div class="gap-4 d-flex position-relative col px-3 border-top bg-light">
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3 fw-semibold" href="">
+                            <span>작성글</span>
+                        </a>
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3" href="">
+                            <span>작성댓글</span>
+                        </a>
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3" href="">
+                            <span>좋아요한 글</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

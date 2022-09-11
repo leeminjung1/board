@@ -66,16 +66,16 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         Article article = Article.builder()
                 .author(member)
-                .title("ㅉ 돌고래상가 누네띠네빵집 가면 이거 꼭 먹어라")
-                .content("<div><span>‘아몬드소보로’</span></div><div><span>겉은 소보로 때문에 바삭바삭하고 속은 슈같이 가벼워서 5개는 거뜬히 먹을수있을맛임ㅇㅇ</span></div><div><span>약간 예전에 유행하던 모카번처럼 속이 비어있고 버터리하면서 약간 짭짤해서 단짠단짠 개미쳤음</span></div><div><span>누네띠네도 크고 바삭바삭해서 맛있긴했는데 보닌은 이게 더 맘에 드누</span></div>")
+                .title("THIS IS TITLE")
+                .content("<p><em><strong>hello!! this is example content:)</strong></em></p>")
                 .category(category0)
                 .build();
         articleRepository.save(article);
 
         Article article2 = Article.builder()
                 .author(member)
-                .title("보닌 팤콘 이벤트 할때")
-                .content("<div><span>사람 괘많아서 디엠 보낼때 두번 보내져서</span></div><div><span>졸라 애처로워보임ㅋㅋㅋㅋㅋ</span></div>")
+                .title("test")
+                .content("<p>hello</p><p>world</p>")
                 .category(category0)
                 .build();
         articleRepository.save(article2);

@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long>{
+    List<Article> findByCategoryId(Long categoryId);
+    List<Article> findByAuthorId(Long authorId);
 
-    public List<Article> findByCategoryId(Long categoryId);
 }

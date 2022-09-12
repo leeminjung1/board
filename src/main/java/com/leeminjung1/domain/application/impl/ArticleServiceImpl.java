@@ -6,7 +6,6 @@ import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.infrastructure.repository.ArticleRepository;
 import com.leeminjung1.infrastructure.repository.CategoryRepository;
-import com.leeminjung1.infrastructure.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<ArticleListDto> findArticlesByCategory(Long categoryId) {
-        List<Article> articles = articleRepository.findByCategoryId(categoryId);
+        List<Article> articles = articleRepository.findByCategoryIdOrderByIdDesc(categoryId);
         List<ArticleListDto> list = new ArrayList<>();
         for (Article article : articles) {
             list.add(new ArticleListDto(article));
@@ -50,9 +49,8 @@ public class ArticleServiceImpl implements ArticleService {
         return list;
     }
 
-    public Optional<Category> findCategoryByCategoryId(Long categoryId) {
-        Optional<Category> category = categoryRepository.findById(categoryId);
-        return category;
+    public Category findCategoryByCategoryId(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.leeminjung1.web.pages;
 
 import com.leeminjung1.domain.application.ArticleService;
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
+import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
 import com.leeminjung1.domain.application.impl.ArticleServiceImpl;
 import com.leeminjung1.domain.application.impl.MemberServiceImpl;
 import com.leeminjung1.domain.model.article.Article;
@@ -35,8 +36,7 @@ public class ArticleController {
     public String articleListByCategory(@PathVariable("categoryId") Long categoryId, Model model) {
         List<ArticleListDto> articles = articleService.findArticlesByCategory(categoryId);
         model.addAttribute("articles", articles);
-        Category category = articleService.findCategoryByCategoryId(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리 입니다."));
+        Category category = articleService.findCategoryByCategoryId(categoryId);
         model.addAttribute("category", category);
         return "articles/allArticleListByCategory";
     }
@@ -61,22 +61,23 @@ public class ArticleController {
 
     @GetMapping("/{categoryId}/new")
     public String newArticle(@PathVariable("categoryId") Long categoryId, Model model) {
-        Category category = articleService.findCategoryByCategoryId(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판입니다."));
+        Category category = articleService.findCategoryByCategoryId(categoryId);
         model.addAttribute("category", category);
 
-        model.addAttribute("article", new Article("", "", null, null));
+        model.addAttribute("article", new ArticleRequestDto());
         return "articles/newArticle";
     }
 
     @PostMapping("/{categoryId}/new")
-    public String submitNewArticle(@ModelAttribute("article") Article article,
+    public String submitNewArticle(@ModelAttribute("article") ArticleRequestDto articleRequestDto,
                                    @PathVariable("categoryId") Long categoryId,
                                    @AuthenticationPrincipal User user) {
-        Member member = memberService.findByUsername(user.getUsername());
-        Category category = articleService.findCategoryByCategoryId(categoryId).get();
-        Article newArticle = new Article(article.getTitle(), article.getContent(), category, member);
-        articleService.save(newArticle);
+
+        articleRequestDto.setAuthor(memberService.findByUsername(user.getUsername()));
+        articleRequestDto.setCategory(articleService.findCategoryByCategoryId(categoryId));
+        Article article = articleRequestDto.toEntity();
+        articleService.save(article);
+
         return "redirect:/" + categoryId;
     }
 }

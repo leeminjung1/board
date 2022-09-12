@@ -43,13 +43,13 @@ public class Article {
     private List<File> files = new ArrayList<>();
 
     @Builder
-    public Article(String title, String content, Category category, Member author) {
+    public Article(String title, String content, Category category, Member author, LocalDateTime createdAt, Integer viewCount, Integer voteCount) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.author = author;
-        this.createdAt = LocalDateTime.now();
-        this.viewCount = 0;
-        this.voteCount = 0;
+        this.createdAt = createdAt;
+        this.viewCount = viewCount;
+        this.voteCount = voteCount;
     }
 }

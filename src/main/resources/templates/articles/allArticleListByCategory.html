@@ -12,15 +12,15 @@
             <button type="button" th:onclick="|location.href='@{/{categoryId}/new(categoryId=${category.id})}'|" class="btn btn-primary">글쓰기</button>
         </div>
         <div id="article_list_area">
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-hover">
+                <thead class="table-light">
                 <tr>
-                    <th></th>
+                    <th style="width:10%"></th>
                     <th>title</th>
-                    <th>author</th>
-                    <th>created at</th>
-                    <th>view count</th>
-                    <th>vote count</th>
+                    <th style="width:10%">author</th>
+                    <th style="width:10%">created at</th>
+                    <th style="width:10%">view count</th>
+                    <th style="width:10%">vote count</th>
                 </tr>
                 </thead>
                 <tbody>

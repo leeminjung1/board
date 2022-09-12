@@ -69,6 +69,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .title("THIS IS TITLE")
                 .content("<p><em><strong>hello!! this is example content:)</strong></em></p>")
                 .category(category0)
+                .createdAt(LocalDateTime.now())
+                .voteCount(0)
+                .viewCount(0)
                 .build();
         articleRepository.save(article);
 
@@ -77,6 +80,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .title("test")
                 .content("<p>hello</p><p>world</p>")
                 .category(category0)
+                .createdAt(LocalDateTime.now())
+                .voteCount(0)
+                .viewCount(0)
                 .build();
         articleRepository.save(article2);
 

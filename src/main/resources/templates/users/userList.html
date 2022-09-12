@@ -18,7 +18,10 @@
             <tbody>
             <tr th:each="member : ${members}">
                 <td th:text="${member.id}"></td>
-                <td th:text="${member.username}"></td>
+                <td>
+                    <a th:href="@{/members/{memberId}/ (memberId=${member.id})}"
+                       th:text="${member.username}"></a>
+                </td>
                 <td th:text="${member.email}"></td>
                 <td th:text="${member.createdDate}"></td>
                 <td th:text="${member.lastPasswordChanged}"></td>

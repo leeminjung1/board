@@ -52,4 +52,8 @@ public class Article {
         this.viewCount = viewCount;
         this.voteCount = voteCount;
     }
+
+    public void updateViewCount(Integer viewCount) {
+        this.viewCount = viewCount;
+    }
 }

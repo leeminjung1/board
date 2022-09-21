@@ -54,6 +54,10 @@ public class ArticleController {
                           Model model) {
         Article article = articleService.findArticleById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+        article.setViewCount(article.getViewCount() + 1);
+        articleService.updateViewCount(articleId, article);
+
         model.addAttribute("article", article);
         model.addAttribute("categoryId", categoryId);
         return "articles/article";

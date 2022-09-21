@@ -66,4 +66,10 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return list;
     }
+
+    @Transactional
+    public void updateViewCount(Long id, Article articleDto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다"));
+        article.updateViewCount(articleDto.getViewCount());
+    }
 }

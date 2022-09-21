@@ -71,7 +71,7 @@ public class MemberController {
     @GetMapping("/members/{memberId}")
     public String memberActivity(@PathVariable("memberId") Long memberId,
                                  Model model) {
-        Member member = memberService.findById(memberId);
+        Member member = memberService.findById(memberId).orElseThrow();
         model.addAttribute("member", member);
 
         List<ArticleListDto> articles = articleService.findArticlesByAuthorId(memberId);

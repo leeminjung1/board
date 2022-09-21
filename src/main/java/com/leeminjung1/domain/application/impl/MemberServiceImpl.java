@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -45,8 +46,8 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(user);
     }
 
-    public Member findById(Long userId) {
-        return memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    public Optional<Member> findById(Long userId) {
+        return memberRepository.findById(userId);//.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
 
     public List<Member> findUsers() {

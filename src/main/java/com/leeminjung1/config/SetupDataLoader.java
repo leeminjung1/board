@@ -7,7 +7,6 @@ import com.leeminjung1.domain.model.member.Privilege;
 import com.leeminjung1.domain.model.member.Role;
 import com.leeminjung1.infrastructure.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;

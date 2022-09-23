@@ -1,14 +1,11 @@
 package com.leeminjung1.web.pages;
 
-import com.leeminjung1.domain.application.ArticleService;
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
 import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
 import com.leeminjung1.domain.application.impl.ArticleServiceImpl;
 import com.leeminjung1.domain.application.impl.MemberServiceImpl;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
-import com.leeminjung1.domain.model.member.Member;
-import com.leeminjung1.infrastructure.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,9 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor

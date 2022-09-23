@@ -58,10 +58,16 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         Category category0 = new Category(null, "category0");
         Category category00 = new Category(category0, "category00");
+        Category category01 = new Category(category0, "category01");
         Category category1 = new Category(null, "category1");
+        Category category2 = new Category(null, "category2");
+        Category category20 = new Category(category2, "category20");
         categoryRepository.save(category0);
         categoryRepository.save(category00);
+        categoryRepository.save(category01);
         categoryRepository.save(category1);
+        categoryRepository.save(category2);
+        categoryRepository.save(category20);
 
         Article article = Article.builder()
                 .author(member)
@@ -109,7 +115,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
         return role;
     }
-
 
     @Bean
     public RoleHierarchy roleHierarchy() {

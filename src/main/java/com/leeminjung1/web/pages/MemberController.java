@@ -1,5 +1,6 @@
 package com.leeminjung1.web.pages;
 
+import com.leeminjung1.config.BackedLoginService;
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
 import com.leeminjung1.domain.application.dtos.RegisterDto;
 import com.leeminjung1.domain.application.dtos.UpdateMemberDto;
@@ -11,8 +12,10 @@ import com.leeminjung1.domain.model.member.Role;
 import com.leeminjung1.domain.model.member.RoleName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,39 +30,26 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberServiceImpl memberService;
+    private final BackedLoginService loginService;
     private final ArticleServiceImpl articleService;
     private final PasswordEncoder passwordEncoder;
-
-    @GetMapping("/register")
-    public String register() {
-        memberService.registerUser(new RegisterDto("user01", "test@test.com", "pass"));
-        memberService.registerAdmin(new RegisterDto("admin02", "test2@test.com", "pass"));
-
-        return "redirect:/";
-    }
-
 
     @GetMapping("/login")
     public String login() {
         return "users/userLogin";
     }
 
-//    @GetMapping("/register")
-//    public String register(Model model) {
-//        model.addAttribute("registerDto", new RegisterDto());
-//        return "users/userRegister";
-//    }
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("registerDto", new RegisterDto());
+        return "users/userRegister";
+    }
 
-/*    @PostMapping("/login")
-    public String login(LoginDto dto) {
-        return "home";
-    }*/
-
-//    @PostMapping("/register")
-//    public String register(RegisterDto dto) {
-//        userService.register(dto);
-//        return "/";
-//    }
+    @PostMapping("/register")
+    public String register(@ModelAttribute("registerDto") RegisterDto registerDto) {
+        memberService.registerUser(registerDto);
+        return "redirect:/login";
+    }
 
     @GetMapping("/members")
     public String memberList(Model model) {
@@ -90,18 +80,16 @@ public class MemberController {
     }
 
     @GetMapping("/settings")
-    public String memberSetting(@AuthenticationPrincipal User user, Model model) {
-        UpdateMemberDto dto = memberService.findMemberDtoForUpdate(user.getUsername());
+    public String memberSetting(Authentication authentication, Model model) {
+        UpdateMemberDto dto = memberService.newUpdateMemberDtoByUserName(authentication.getName());
         model.addAttribute("member", dto);
-        log.info(String.valueOf(dto.getId()));
         return "users/userSetting";
     }
 
     @PostMapping("/settings")
-    public String updateMember(@AuthenticationPrincipal User user,
-                               @ModelAttribute("member") UpdateMemberDto dto) {
-        memberService.updateMember(user.getUsername(), dto);
-
-        return "users/userSetting";
+    public String updateMember(@ModelAttribute("member") UpdateMemberDto dto) {
+        log.info(dto.toString());
+        memberService.updateMember(dto);
+        return "redirect:/settings";
     }
 }

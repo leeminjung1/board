@@ -7,13 +7,18 @@ import com.leeminjung1.domain.model.member.Member;
 import com.leeminjung1.infrastructure.repository.MemberRepository;
 import com.leeminjung1.infrastructure.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,14 +70,25 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
-    public UpdateMemberDto findMemberDtoForUpdate(String username) {
+    public UpdateMemberDto newUpdateMemberDtoByUserName(String username) {
         Member member = memberRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-        return new UpdateMemberDto(member.getId(), member.getUsername(), member.getEmail(), member.getPassword(), member.getImgUrl());
+        return new UpdateMemberDto(member.getUsername(), member.getEmail(), member.getPassword(), member.getImgUrl());
     }
 
-    public void updateMember(String originUsername, UpdateMemberDto dto) {
-        Member member = memberRepository.findByUsername(originUsername).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    public void updateMember(UpdateMemberDto dto) {
+        if (StringUtils.hasText(dto.getPassword())) {
+            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        } else {
+            dto.setPassword(null);
+        }
+        Member member = memberRepository.findByEmail(dto.getEmail()).orElseThrow(() -> new IllegalArgumentException("non exist email"));
         member.updateMember(dto);
         memberRepository.save(member);
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(
+                        member.getUsername(),
+                        member.getPassword(),
+                        SecurityContextHolder.getContext().getAuthentication().getAuthorities()));
     }
 }

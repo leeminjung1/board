@@ -40,6 +40,8 @@ public class Member {
     @Column(name = "imgUrl")
     private String imgUrl;
 
+    private boolean enabled;
+
     /*@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private Collection<MemberRole> memberRoles;*/
 
@@ -60,13 +62,17 @@ public class Member {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.imgUrl = "cafe_profile_363.png";
         this.createdDate = LocalDateTime.now();
         this.lastPasswordChanged = LocalDateTime.now();
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public void updateMember(UpdateMemberDto dto) {
         this.username = dto.getUsername();
-        this.email = dto.getEmail();
         if (dto.getPassword() != null) {
             this.password = dto.getPassword();
         }

@@ -7,23 +7,28 @@
 <div>
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div class="container">
-        <table>
-            <thead>
-            <tr>
-                <th>게시판명</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="category : ${categories}">
-                <td>
-                    <a href="#"
-                       th:href="@{/{categoryId} (categoryId=${category.id})}"
-                       th:text="${category.name}">
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div style="width:300px">
+            <nav>
+                <ul class="list-group">
+                    <li th:each="category : ${categories}" th:if="${category.parent == null}" class="list-group">
+                        <a class="py-3 fw-bold"
+                           th:href="@{/{categoryId}/ (categoryId=${category.id})}"
+                           th:text="${category.name}">
+                        </a>
+                        <ul>
+                            <li th:each="child : ${category.child}"
+                                class="list-group-item border-top-0 border-bottom-0 border-end-0">
+                                <a class="child mb-2"
+                                   th:href="@{/{categoryId}/ (categoryId=${child.id})}"
+                                   th:text="${child.name}"></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+
     </div>
     <div th:replace="fragments/footer :: footer" />
 </div>

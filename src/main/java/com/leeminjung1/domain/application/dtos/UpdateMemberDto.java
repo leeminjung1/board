@@ -8,17 +8,25 @@ import lombok.Setter;
 @Setter
 public class UpdateMemberDto {
 
-    private Long id;
     private String username;
     private String email;
     private String password;
     private String imgUrl;
 
-    public UpdateMemberDto(Long id, String username, String email, String password, String imgUrl) {
-        this.id = id;
+    public UpdateMemberDto(String username, String email, String password, String imgUrl) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.imgUrl = imgUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "UpdateMemberDto{" +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                '}';
     }
 }

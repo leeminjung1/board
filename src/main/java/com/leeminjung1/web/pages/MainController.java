@@ -1,6 +1,8 @@
 package com.leeminjung1.web.pages;
 
+import com.leeminjung1.domain.application.dtos.CategoryDto;
 import com.leeminjung1.domain.application.dtos.RegisterDto;
+import com.leeminjung1.domain.application.impl.CategoryService;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.infrastructure.repository.ArticleRepository;
@@ -22,23 +24,11 @@ import java.util.List;
 @Slf4j
 public class MainController {
 
-    private final CategoryRepository categoryRepository;
-    private final ArticleRepository articleRepository;
+    private final CategoryService categoryService;
 
     @GetMapping({"/", "/home"})
     public String categoryList(Model model) {
-        List<Category> categoryList = categoryRepository.findAll();
-        model.addAttribute("categories", categoryList);
-
-        List<Integer> articlesCount = new ArrayList<>();
-        for (Category category : categoryList) {
-            int count = category.getArticles().size();
-            articlesCount.add(count);
-            log.info("count "+String.valueOf(count));
-        }
-        model.addAttribute("articlesCount", articlesCount);
-
-
+        model.addAttribute("categoryDtos", categoryService.getCategoryDto());
         return "home";
     }
 

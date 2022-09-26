@@ -10,17 +10,17 @@
         <div style="width:300px">
             <nav>
                 <ul class="list-group">
-                    <li th:each="category : ${categories}" th:if="${category.parent == null}" class="list-group">
+                    <li th:each="categoryDto : ${categoryDtos}" th:if="${categoryDto.category.parent == null}" class="list-group">
                         <a class="py-3 fw-bold"
-                           th:href="@{/{categoryId}/ (categoryId=${category.id})}"
-                           th:text="${category.name}">
+                           th:href="@{/{categoryId}/ (categoryId=${categoryDto.category.id})}"
+                           th:text="|${categoryDto.category.name} (${categoryDto.articleCount})|">
                         </a>
                         <ul>
-                            <li th:each="child : ${category.child}"
+                            <li th:if="${categoryDto.category.parent != null}"
                                 class="list-group-item border-top-0 border-bottom-0 border-end-0">
-                                <a class="child mb-2"
-                                   th:href="@{/{categoryId}/ (categoryId=${child.id})}"
-                                   th:text="${child.name}"></a>
+                                <a class="mb-2"
+                                   th:href="@{/{categoryId}/ (categoryId=${categoryDto.category.id})}"
+                                   th:text="|${categoryDto.category.name} (${categoryDto.articleCount})|">
                             </li>
                         </ul>
                     </li>

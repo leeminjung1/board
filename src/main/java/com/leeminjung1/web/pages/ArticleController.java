@@ -12,10 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -58,6 +55,14 @@ public class ArticleController {
         return "articles/article";
     }
 
+    @DeleteMapping("/{categoryId}/v/{articleId}")
+    public String deleteArticle(@PathVariable("categoryId") Long categoryId,
+                                @PathVariable("articleId") Long articleId) {
+        articleService.deleteById(articleId);
+        return "redirect:/" + categoryId;
+    }
+
+
     @GetMapping("/{categoryId}/new")
     public String newArticle(@PathVariable("categoryId") Long categoryId, Model model) {
         Category category = articleService.findCategoryByCategoryId(categoryId);
@@ -79,4 +84,6 @@ public class ArticleController {
 
         return "redirect:/" + categoryId;
     }
+
+
 }

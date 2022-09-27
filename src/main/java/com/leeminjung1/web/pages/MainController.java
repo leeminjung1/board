@@ -28,7 +28,7 @@ public class MainController {
 
     @GetMapping({"/", "/home"})
     public String categoryList(Model model) {
-        model.addAttribute("categoryDtos", categoryService.getCategoryDto());
+        model.addAttribute("categoryDto", categoryService.getCategoryDto());
         return "home";
     }
 

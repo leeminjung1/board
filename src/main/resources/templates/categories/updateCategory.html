@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
+        <div style="width:300px">
+            <div>
+                <div class="list-group">
+                    <div th:each="category : ${categoryDto.categories}" class="list-group">
+<!--                        parent-->
+                        <div th:if="${category.parent==null}">
+                            <div class="float-start" id="category_item">
+                                <span th:text="${category.name}"></span>
+<!--                                <span th:text="|(${categoryDto.articleCount})|"></span>-->
+                            </div>
+                            <div class="float-start" id="edit_btn" style="display:none;">
+                                <form method="post" th:action="@{/manage/category}">
+                                    <input type="text">
+                                    <button type="reset" onclick="cancelEditName()">취소</button>
+                                    <button type="submit">확인</button>
+                                </form>
+                            </div>
+                            <div class="float-end" id="info_btn">
+                                <a style="cursor:pointer" onclick="editName()">수정</a>
+                            </div>
+                        </div>
+                        <!--                            자식리스트-->
+                        <div th:each="child : ${category.child}">
+                            <div style="display:inline">
+                                <div class="float-start">
+                                    <span th:text="${child.parent.name}"></span>
+                                    <span>/</span>
+                                    <span th:text="${child.name}"></span>
+                                </div>
+                                <div class="float-end">
+                                    <a href="#">수정</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div>
+<script>
+function editName(){
+    document.getElementById("info_btn").style.display = "none";
+    document.getElementById("category_item").style.display = "none";
+    document.getElementById("edit_btn").style.display = "block";
+    return false;
+}
+
+function cancelEditName(){
+    document.getElementById("info_btn").style.display = "block";
+    document.getElementById("category_item").style.display = "block";
+    document.getElementById("edit_btn").style.display = "none";
+}
+</script>
+</body>
+</html>

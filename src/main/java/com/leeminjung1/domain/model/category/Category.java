@@ -20,9 +20,13 @@ public class Category {
     @Column(name = "category_id", nullable = false)
     private Long id;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne
+    @Column(name = "level", nullable = false)
+    private Integer level;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
 
@@ -32,8 +36,14 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<Article> articles = new ArrayList<>();
 
-    public Category (Category parent, String name) {
+    public Category(Category parent, String name) {
         this.parent = parent;
         this.name = name;
+    }
+
+
+    @PrePersist
+    public void prePersist() {
+        this.level = this.level == null ? 0 : this.level;
     }
 }

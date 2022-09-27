@@ -41,7 +41,6 @@ public class SecurityConfig {
                 .permitAll()
                 .and()
                 .sessionManagement()
-                .invalidSessionUrl("/invalidSession.html")
                 .sessionFixation().none()
                 .and()
                 .logout()

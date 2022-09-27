@@ -2,6 +2,7 @@ package com.leeminjung1.web.pages;
 
 import com.leeminjung1.config.BackedLoginService;
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
+import com.leeminjung1.domain.application.dtos.LoginDto;
 import com.leeminjung1.domain.application.dtos.RegisterDto;
 import com.leeminjung1.domain.application.dtos.UpdateMemberDto;
 import com.leeminjung1.domain.application.impl.ArticleServiceImpl;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,8 +48,9 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("registerDto") RegisterDto registerDto) {
+    public String register(@ModelAttribute("registerDto") RegisterDto registerDto, RedirectAttributes redirectAttributes) {
         memberService.registerUser(registerDto);
+        redirectAttributes.addFlashAttribute("username", registerDto.getUsername());
         return "redirect:/login";
     }
 
@@ -88,7 +91,6 @@ public class MemberController {
 
     @PostMapping("/settings")
     public String updateMember(@ModelAttribute("member") UpdateMemberDto dto) {
-        log.info(dto.toString());
         memberService.updateMember(dto);
         return "redirect:/settings";
     }

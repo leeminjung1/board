@@ -44,7 +44,9 @@
             <div class="float-start">
                 <button type="button" th:onclick="|location.href='@{/{categoryId}/new(categoryId=${categoryId})}'|" class="btn btn-primary">글쓰기</button>
                 <button class="btn">수정</button>
-                <button class="btn">삭제</button>
+                <form class="d-inline-block" action="#" th:action="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}" th:method="DELETE" >
+                    <button type="submit" class="btn">삭제</button>
+                </form>
             </div>
             <div class="float-end">
             </div>

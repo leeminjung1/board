@@ -2,6 +2,7 @@ package com.leeminjung1.domain.model.member;
 
 import com.leeminjung1.domain.application.dtos.UpdateMemberDto;
 import com.leeminjung1.domain.model.article.Article;
+import com.leeminjung1.domain.model.comment.Comment;
 import lombok.*;
 
 import javax.persistence.*;
@@ -56,6 +57,9 @@ public class Member {
 
     @OneToMany(mappedBy = "author")
     private Collection<Article> articles;
+
+    @OneToMany(mappedBy = "author")
+    private Collection<Comment> comments;
 
     @Builder
     public Member(String username, String email, String password) {

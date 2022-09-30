@@ -2,6 +2,7 @@ package com.leeminjung1.config;
 
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
+import com.leeminjung1.domain.model.comment.Comment;
 import com.leeminjung1.domain.model.member.Member;
 import com.leeminjung1.domain.model.member.Privilege;
 import com.leeminjung1.domain.model.member.Role;
@@ -33,6 +34,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final PrivilegeRepository privilegeRepository;
     private final CategoryRepository categoryRepository;
     private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -90,6 +92,16 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .viewCount(0)
                 .build();
         articleRepository.save(article2);
+
+        Comment comment = Comment.builder()
+                .parent(null)
+                .commentLevel((byte) 1)
+                .voteCount(0)
+                .author(member)
+                .article(article2)
+                .content("댓글!")
+                .build();
+        commentRepository.save(comment);
 
         alreadySetup = true;
     }

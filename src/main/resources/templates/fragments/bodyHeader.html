@@ -43,7 +43,7 @@
                         <button sec:authentication="name" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             User Dropdown button
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
+                        <ul class="dropdown-menu">
                             <li><a class="dropdown-item" th:href="@{/settings}">내 프로필</a></li>
                             <li><a class="dropdown-item" th:href="@{/members/me}">활동내역</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -58,4 +58,22 @@
             </div>
         </div>
     </nav>
+<style>
+    a:link {
+    text-decoration:none;
+    color: black;
+    }
+    a:visited {
+    text-decoration:none;
+    color: black;
+    }
+    a:hover {
+    text-decoration:underline;
+    color: black;
+    }
+    a:active {
+    text-decoration:none;
+    color: black;
+    }
+</style>
 </header>

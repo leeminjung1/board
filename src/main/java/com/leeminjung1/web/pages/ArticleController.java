@@ -2,6 +2,7 @@ package com.leeminjung1.web.pages;
 
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
 import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
+import com.leeminjung1.domain.application.dtos.CommentDto;
 import com.leeminjung1.domain.application.impl.ArticleServiceImpl;
 import com.leeminjung1.domain.application.impl.MemberServiceImpl;
 import com.leeminjung1.domain.model.article.Article;
@@ -52,6 +53,7 @@ public class ArticleController {
 
         model.addAttribute("article", article);
         model.addAttribute("categoryId", categoryId);
+        model.addAttribute("commentDto", new CommentDto());
         return "articles/article";
     }
 

@@ -1,6 +1,7 @@
 package com.leeminjung1.domain.application.impl;
 
 import com.leeminjung1.domain.application.dtos.CategoryDto;
+import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.infrastructure.repository.ArticleRepository;
 import com.leeminjung1.infrastructure.repository.CategoryRepository;
@@ -19,6 +20,11 @@ public class CategoryService {
 
     private final ArticleRepository articleRepository;
     private final CategoryRepository categoryRepository;
+
+    public Long findCategoryIdByArticleId(Long articleId) {
+        Optional<Article> article = articleRepository.findById(articleId);
+        return article.get().getCategory().getId();
+    }
 
     public void newCategory(String name, Long parentId) {
         Optional<Category> parent = categoryRepository.findById(parentId);

@@ -13,6 +13,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table
@@ -26,10 +27,11 @@ public class Comment {
     private Long id;
 
     private Byte commentLevel;
+    private Integer commentOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
-    private Member author;
+    @JoinColumn(name = "writer_id")
+    private Member writer;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
@@ -42,7 +44,7 @@ public class Comment {
     private File file;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reference_id")
+    @JoinColumn(name = "parent_id")
     private Comment parent;
 
     @OneToMany(mappedBy = "parent")
@@ -52,13 +54,15 @@ public class Comment {
     private Integer voteCount;
 
     @Builder
-    public Comment(Byte commentLevel, Member author, Article article, String content, Comment parent, Integer voteCount) {
+    public Comment(Byte commentLevel, Integer commentOrder, Member writer, Article article, String content, File file, Comment parent, Integer voteCount) {
         this.commentLevel = commentLevel;
-        this.author = author;
+        this.commentOrder = commentOrder;
+        this.writer = writer;
         this.article = article;
         this.content = content;
-        this.parent = parent;
-        this.createdAt = LocalDateTime.now();
+        this.file = file;
+        this.parent = Objects.requireNonNullElse(parent, this);
         this.voteCount = voteCount;
+        this.createdAt = LocalDateTime.now();
     }
 }

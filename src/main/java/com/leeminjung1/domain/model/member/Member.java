@@ -58,7 +58,7 @@ public class Member {
     @OneToMany(mappedBy = "author")
     private Collection<Article> articles;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "writer")
     private Collection<Comment> comments;
 
     @Builder

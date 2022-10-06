@@ -95,13 +95,47 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         Comment comment = Comment.builder()
                 .parent(null)
-                .commentLevel((byte) 1)
+                .commentLevel((byte) 0)
                 .voteCount(0)
-                .author(member)
+                .writer(member)
                 .article(article2)
                 .content("댓글!")
+                .commentOrder(0)
                 .build();
         commentRepository.save(comment);
+
+        Comment comment0 = Comment.builder()
+                .parent(null)
+                .commentLevel((byte) 0)
+                .voteCount(0)
+                .writer(member)
+                .article(article2)
+                .content("댓글2")
+                .commentOrder(0)
+                .build();
+        commentRepository.save(comment0);
+
+        Comment comment1 = Comment.builder()
+                .parent(comment)
+                .commentLevel((byte) 1)
+                .voteCount(0)
+                .writer(member)
+                .article(article2)
+                .content("대댓글")
+                .commentOrder(1)
+                .build();
+        commentRepository.save(comment1);
+
+        Comment comment2 = Comment.builder()
+                .parent(comment)
+                .commentLevel((byte) 1)
+                .voteCount(0)
+                .writer(member)
+                .article(article2)
+                .content("대댓글2")
+                .commentOrder(2)
+                .build();
+        commentRepository.save(comment2);
 
         alreadySetup = true;
     }

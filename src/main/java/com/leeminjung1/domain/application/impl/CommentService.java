@@ -20,9 +20,12 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .content(commentDto.getContent())
                 .commentLevel(commentDto.getCommentLevel())
-                .parent(commentDto.getReferenceId() == null ? null : commentRepository.findById(commentDto.getReferenceId()).orElseThrow())
+                .commentOrder(commentDto.getCommentLevel() == 0 ? 0 :
+                        commentRepository.findFirstByParentIdOrderByCommentOrderDesc(commentDto.getParentId()).getCommentOrder() + 1
+                        )
+                .parent(commentDto.getParentId() == null ? null : commentRepository.findById(commentDto.getParentId()).orElseThrow())
                 .article(articleRepository.findById(articleId).orElseThrow())
-                .author(memberRepository.findById(authorId).orElseThrow())
+                .writer(memberRepository.findById(authorId).orElseThrow())
                 .voteCount(0)
                 .build();
 

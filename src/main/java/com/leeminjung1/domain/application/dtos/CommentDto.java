@@ -11,7 +11,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class CommentDto {
     private Byte commentLevel;
-    private Long referenceId;
+    private Long parentId;
     private String content;
-
 }

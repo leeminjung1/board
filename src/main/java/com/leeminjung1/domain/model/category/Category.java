@@ -1,6 +1,7 @@
 package com.leeminjung1.domain.model.category;
 
 import com.leeminjung1.domain.model.article.Article;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "category")
@@ -31,19 +33,15 @@ public class Category {
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Category> child = new ArrayList<>();
+    private List<Category> children = new ArrayList<>();
 
     @OneToMany(mappedBy = "category")
     private List<Article> articles = new ArrayList<>();
 
-    public Category(Category parent, String name) {
-        this.parent = parent;
+    @Builder
+    public Category(String name, Integer level, Category parent) {
         this.name = name;
-    }
-
-
-    @PrePersist
-    public void prePersist() {
-        this.level = this.level == null ? 0 : this.level;
+        this.level = level;
+        this.parent = Objects.requireNonNullElse(parent, this);
     }
 }

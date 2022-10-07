@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,9 +23,13 @@ public class CategoryController {
         return "categories/updateCategory";
     }
 
-    @PostMapping("/manage/category")
+    @PutMapping("/manage/category")
     public String manageCategory(@ModelAttribute("category") Category category) {
         categoryService.updateCategory(category);
+
+//        to fix
+
         return "redirect:/manage/category";
+
     }
 }

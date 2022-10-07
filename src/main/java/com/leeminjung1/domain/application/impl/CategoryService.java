@@ -34,7 +34,7 @@ public class CategoryService {
             category.setLevel(0);
         } else {                    // 하위 카테고리
             category.setParent(parent.get());
-            category.setLevel(parent.get().getChild().size());
+            category.setLevel(parent.get().getChildren().size());
         }
         category.setName(name);
         categoryRepository.save(category);

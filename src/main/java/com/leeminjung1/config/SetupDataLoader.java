@@ -58,45 +58,48 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         member.setImgUrl("cafe_profile_363.png");
         userRepository.save(member);
 
+        Category root = Category.getRoot();
+        categoryRepository.save(root);
+
         Category category0 = Category.builder()
-                .level(0)
                 .name("category0")
-                .parent(null)
+                .parent(root)
+                .priority(0)
                 .build();
         categoryRepository.save(category0);
 
         Category category00 = Category.builder()
-                .level(1)
                 .name("category00")
                 .parent(category0)
+                .priority(0)
                 .build();
         categoryRepository.save(category00);
 
         Category category01 = Category.builder()
                 .parent(category0)
                 .name("category01")
-                .level(1)
+                .priority(1)
                 .build();
         categoryRepository.save(category01);
 
         Category category1 = Category.builder()
-                .level(0)
                 .name("category1")
-                .parent(null)
+                .parent(root)
+                .priority(1)
                 .build();
         categoryRepository.save(category1);
 
         Category category2 = Category.builder()
-                .level(0)
                 .name("category2")
-                .parent(null)
+                .parent(root)
+                .priority(2)
                 .build();
         categoryRepository.save(category2);
 
         Category category20 = Category.builder()
-                .level(1)
                 .name("category20")
                 .parent(category2)
+                .priority(0)
                 .build();
         categoryRepository.save(category20);
 

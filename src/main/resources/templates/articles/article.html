@@ -179,8 +179,10 @@
         <div class="pt-3 clearfix">
             <div class="float-start">
                 <button type="button" th:onclick="|location.href='@{/{categoryId}/new(categoryId=${categoryId})}'|" class="btn btn-primary">글쓰기</button>
-                <button class="btn">수정</button>
-                <form class="d-inline-block" action="#" th:action="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}" th:method="DELETE" >
+                <button class="btn" th:if="${article.author?.username == #authentication.name}" th:onclick="|location.href='@{/{categoryId}/update/{articleId}(categoryId=${categoryId}, articleId=${article.id})}'|">수정</button>
+                <form class="d-inline-block" th:if="${article.author?.username == #authentication.name}"
+                      th:action="@{/{categoryId}/delete/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}"
+                      th:method="post" >
                     <button type="submit" class="btn">삭제</button>
                 </form>
             </div>

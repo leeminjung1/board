@@ -34,7 +34,7 @@ public class Article {
     @JoinColumn(name = "author_id")
     private Member author;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     private LocalDateTime createdAt;

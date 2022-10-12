@@ -7,37 +7,67 @@
 <div>
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div class="container">
-        <div class="my-3 p-2 bg-light">
-            <div id="categoryList">
-                <div th:if="${category.level == 0}"
-                     th:each="category : ${categoryDto.categories}">
-                    <div  class="px-3 py-2 border bg-white">
-                        <a class="fw-bold"
-                           th:href="@{/{categoryId}/ (categoryId=${category.id})}"
-                           th:text="|${category.name}|">
-                        </a>
-                    </div>
-                    <div>
-                        <div th:if="${child.level != 0 and child.parent.id == category.id}"
-                            th:each="child : ${category.children}"
-                            class="ms-5">
-                            <div class="px-3 py-2 border bg-white">
-                                <a th:href="@{/{categoryId}/ (categoryId=${child.id})}"
-                                   th:text="|${child.name}|">
-                                </a>
+        <form th:action="@{/manage/category}" method="post" th:object="${inputs}">
+            <div class="my-3 p-2 bg-light">
+                <div id="categoryList">
+                    <div th:if="${category.depth == 1}"
+                         th:each="category : ${categoryDto.categories}">
+                        <div class="px-3 py-2 border bg-white">
+                            <a class="fw-bold"
+                               th:href="@{/{categoryId}/ (categoryId=${category.id})}"
+                               th:text="|${category.name}|">
+                            </a>
+                        </div>
+                        <div>
+                            <div th:if="${child.depth ==2}"
+                                 th:each="child : ${category.children}"
+                                 class="ms-5">
+                                <div class="px-3 py-2 border bg-white">
+                                    <a th:href="@{/{categoryId}/ (categoryId=${child.id})}"
+                                       th:text="|${child.name}|">
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="px-3 py-2 border">
+                    <a href="javascript:addCategory()"> + 카테고리 추가</a>
+                </div>
             </div>
-            <div class="px-3 py-2 border">
-                <a href="javascript:addCategory()"> + 카테고리 추가</a>
+            <div>
+                <button type="submit">변경사항 저장</button>
             </div>
-        </div>
+        </form>
     </div>
     <div th:replace="fragments/footer :: footer" />
-</div>
-<script th:inline="javascript">
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+    $('#categoryList').sortable({
+        update: function(event, ui) {
+            var result = $(this).sortable('toArray', {attribute: 'id'});
+            console.log(result);
+        },
+    });
+});
+
+var idx = -1;
+
+function onclickAddCategory(){
+<!--    var name = document.getElementById('newCategoryName').value;-->
+    var name = event.target.value
+    let categoryList = [[${categoryDto.categories}]];
+    let newCategory = {
+        id: idx--,
+        name: name,
+        depth: 1,
+        priority: 0,
+        parent: [[${categoryDto.categories[0]}]],
+    };
+    categoryList.push(newCategory);
+    console.log(categoryList);
+};
+
 function editName(){
     document.getElementById("info_btn").style.display = "none";
     document.getElementById("category_item").style.display = "none";
@@ -60,7 +90,7 @@ function addCategory() {
     div1.appendChild(div);
 
     var form = document.createElement("form");
-    form.setAttribute("method", "POST");
+    form.setAttribute("method", "");
     form.setAttribute("th:action", "");
     form.setAttribute("th:object", "");
     div.appendChild(form);
@@ -70,7 +100,9 @@ function addCategory() {
     form.appendChild(div);
 
     var input = document.createElement("input");
+<!--    input.setAttribute("id", "newCategoryName");-->
     input.setAttribute("type", "text");
+    input.setAttribute("th:field", *{categories});
     input.setAttribute("class", "form-control");
     input.setAttribute("style", "width:300px");
     div.appendChild(input);
@@ -80,8 +112,10 @@ function addCategory() {
     form.appendChild(div);
 
     var btnSubmit = document.createElement("button");
-    btnSubmit.setAttribute("type", "submit");
+    btnSubmit.setAttribute("type", "button");
     btnSubmit.setAttribute("class", "btn");
+    btnSubmit.setAttribute("id", "btnSubmit");
+    btnSubmit.setAttribute("onclick", "onclickAddCategory()");
     btnSubmit.appendChild(document.createTextNode("확인"));
     div.appendChild(btnSubmit);
 
@@ -92,5 +126,6 @@ function addCategory() {
     div.appendChild(btnCancel);
 }
 </script>
+</div>
 </body>
 </html>

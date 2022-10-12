@@ -26,7 +26,7 @@ public class CategoryService {
         return article.get().getCategory().getId();
     }
 
-    public void newCategory(String name, Long parentId) {
+/*    public void newCategory(String name, Long parentId) {
         Optional<Category> parent = categoryRepository.findById(parentId);
         Category category = new Category();
         if (parent.isEmpty()) {     // 최상위 카테고리
@@ -38,7 +38,7 @@ public class CategoryService {
         }
         category.setName(name);
         categoryRepository.save(category);
-    }
+    }*/
 
 
     public CategoryDto getCategoryDto() {

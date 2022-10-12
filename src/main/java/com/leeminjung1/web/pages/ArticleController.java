@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -57,12 +58,46 @@ public class ArticleController {
         return "articles/article";
     }
 
-    @DeleteMapping("/{categoryId}/v/{articleId}")
+    @PostMapping("/{categoryId}/delete/{articleId}")
     public String deleteArticle(@PathVariable("categoryId") Long categoryId,
                                 @PathVariable("articleId") Long articleId) {
         articleService.deleteById(articleId);
         return "redirect:/" + categoryId;
     }
+
+    @GetMapping("/{categoryId}/update/{articleId}")
+    public String updateArticle(@PathVariable("categoryId") Long categoryId,
+                                @PathVariable("articleId") Long articleId,
+                                Model model) {
+        Article article = articleService.findArticleById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+
+        ArticleRequestDto dto = ArticleRequestDto.builder()
+                .author(article.getAuthor())
+                .category(article.getCategory())
+                .content(article.getContent())
+                .title(article.getTitle())
+                .build();
+
+        model.addAttribute("article", dto);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("articleId", articleId);
+        return "articles/updateArticle";
+    }
+
+    @PostMapping("/{categoryId}/update/{articleId}")
+    public String updateArticle(@ModelAttribute("article") ArticleRequestDto articleRequestDto,
+                                @PathVariable("categoryId") Long categoryId,
+                                @PathVariable("articleId") Long articleId) {
+
+        Article article = articleService.findArticleById(articleId).orElseThrow();
+        article.setTitle(articleRequestDto.getTitle());
+        article.setContent(articleRequestDto.getContent());
+        articleService.save(article);
+        return "redirect:/" + categoryId + "/v/" + articleId;
+    }
+
 
 
     @GetMapping("/{categoryId}/new")

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="categoryList" style="width:300px">
     <ul class="list-group">
-            <li th:if="${category.level == 0}"
+            <li th:if="${category.depth == 1}"
                 th:each="category : ${categoryDto.categories}"
                 class="list-group-item">
                 <div class="py-2">
@@ -12,7 +12,7 @@
                     </a>
                 </div>
                 <ul class="list-group">
-                    <li th:if="${child.level != 0 and child.parent.id == category.id}"
+                    <li th:if="${child.depth == 2}"
                         th:each="child : ${category.children}"
                         class="list-group-item">
                         <div>

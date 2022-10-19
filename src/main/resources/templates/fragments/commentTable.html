@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<table th:fragment="commentTable" class="table table-hover rounded-top">
+    <div th:if="${#lists.isEmpty(comments)}"
+         class="bg-light p-4 text-center">
+        작성한 댓글이 없습니다.
+    </div>
+    <thead th:unless="${#lists.isEmpty(comments)}" class="table-light text-center">
+    <tr>
+        <th>댓글</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="comment : ${comments}">
+        <td class="">
+            <a th:href="@{/{categoryId}/v/{articleId} (categoryId=${comment.categoryId},articleId=${comment.articleId})}">
+                <div th:text="${comment.content}"></div>
+                <div class="text-secondary fw-light" th:text="${comment.createdAt}"></div>
+                <div class="text-secondary fw-light mt-2" th:text="${comment.title}"></div>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>

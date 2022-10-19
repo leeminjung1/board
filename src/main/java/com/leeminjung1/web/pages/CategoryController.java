@@ -1,5 +1,8 @@
 package com.leeminjung1.web.pages;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leeminjung1.domain.application.dtos.CategoryDto;
 import com.leeminjung1.domain.application.dtos.CategoryInputDto;
 import com.leeminjung1.domain.application.impl.CategoryService;
@@ -8,10 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,6 +39,16 @@ public class CategoryController {
 //        to fix
 
         return "redirect:/manage/category";
-
     }
+
+    @RequestMapping("/memberInfo.do")
+    public String updateCategory(@RequestParam Map<String, Object> parameters) throws JsonProcessingException {
+        String json = parameters.get("paramList").toString();
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, Object>> paramList = mapper.readValue(json, new TypeReference<ArrayList<Map<String, Object>>>(){});
+        log.info(String.valueOf(paramList));
+        return "redirect:/manage/category";
+    }
+
+
 }

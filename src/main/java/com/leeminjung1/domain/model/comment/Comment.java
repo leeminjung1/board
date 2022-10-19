@@ -37,6 +37,7 @@ public class Comment {
     @JoinColumn(name = "article_id")
     private Article article;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     @ManyToOne

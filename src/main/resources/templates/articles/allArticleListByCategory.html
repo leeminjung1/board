@@ -15,12 +15,12 @@
             <table class="table table-hover">
                 <thead class="table-light">
                 <tr>
-                    <th style="width:10%"></th>
+                    <th></th>
                     <th>제목</th>
-                    <th style="width:10%">작성자</th>
-                    <th style="width:10%">작성일</th>
-                    <th style="width:10%">조회</th>
-                    <th style="width:10%">좋아요</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                    <th>조회</th>
+                    <th>좋아요</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -29,7 +29,9 @@
                     <td>
                         <a href="#"
                            th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}"
-                           th:text="${article.title}"></a>
+                           th:text="${article.title}">
+                        </a>
+                        <span class="text-info" th:text="|[${article.commentCount}]|"></span>
                     </td>
                     <td>
                         <a th:href="@{/members/{memberId}/ (memberId=${article.author?.id})}"
@@ -37,7 +39,7 @@
                     </td>
                     <td th:text="${article.createdAt}"></td>
                     <td th:text="${article.viewCount}"></td>
-                    <td th:text="${article.voteCount}"></td>
+                    <td th:text="${article.likeCount}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -45,6 +47,6 @@
 
     </div>
     <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
+</div>
 </body>
 </html>

@@ -1,7 +1,9 @@
 package com.leeminjung1.domain.model.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leeminjung1.domain.application.dtos.UpdateMemberDto;
 import com.leeminjung1.domain.model.article.Article;
+import com.leeminjung1.domain.model.article.ArticleLike;
 import com.leeminjung1.domain.model.comment.Comment;
 import lombok.*;
 
@@ -26,7 +28,7 @@ public class Member {
     @Column(name = "username", nullable = false, length = 50, unique = true)
     private String username;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "password", nullable = false)
@@ -61,12 +63,16 @@ public class Member {
     @OneToMany(mappedBy = "writer")
     private Collection<Comment> comments;
 
+    @OneToMany(mappedBy = "member")
+    @JsonIgnore
+    private Collection<ArticleLike> likes;
+
     @Builder
     public Member(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.imgUrl = "cafe_profile_363.png";
+        this.imgUrl = "user_profile_default.png";
         this.createdDate = LocalDateTime.now();
         this.lastPasswordChanged = LocalDateTime.now();
     }

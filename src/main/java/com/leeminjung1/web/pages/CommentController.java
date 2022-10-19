@@ -23,18 +23,16 @@ public class CommentController {
     private final MemberServiceImpl memberService;
     private final CategoryService categoryService;
 
+    /**
+     * 댓글 작성
+     */
     @PostMapping("/comment/add/{articleId}")
     public String addComment(@ModelAttribute CommentDto commentDto,
                              @PathVariable Long articleId,
                              @AuthenticationPrincipal User user) {
 
         Member author = memberService.findByUsername(user.getUsername());
-
-        log.info(user.toString());
-        log.info(articleId.toString());
-        log.info(commentDto.toString());
         commentService.addComment(author.getId(), articleId, commentDto);
-
         Long categoryId = categoryService.findCategoryIdByArticleId(articleId);
 
         return "redirect:/" + categoryId + "/v/" + articleId;

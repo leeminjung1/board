@@ -2,22 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header" />
 <style>
-    a:link {
-    text-decoration:none;
-    color: black;
-    }
-    a:visited {
-    text-decoration:none;
-    color: black;
-    }
-    a:hover {
-    text-decoration:underline;
-    color: black;
-    }
-    a:active {
-    text-decoration:none;
-    color: black;
-    }
+a:link {
+text-decoration:none;
+color: black;
+}
+a:visited {
+text-decoration:none;
+color: black;
+}
+a:hover {
+text-decoration:underline;
+color: black;
+}
+a:active {
+text-decoration:none;
+color: black;
+}
+.active{
+    font-weight:bold;
+    border-bottom: 2px solid;
+}
 </style>
 <body>
 <div>
@@ -35,46 +39,46 @@
                         <div class="ms-3 fs-4 fw-bold" th:text="${member.username}" />
                     </div>
                     <div class="gap-4 d-flex position-relative col px-3 border-top bg-light">
-                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3 fw-semibold" href="">
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3"
+                           th:href="@{/members/{memberId}(tab='articles', memberId=${member.id})}"
+                           th:classappend="${#request.getParameter('tab') == null or #request.getParameter('tab') == 'articles'}? 'active'">
                             <span>작성글</span>
                         </a>
-                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3" href="">
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3"
+                           th:href="@{/members/{memberId}(tab='comments', memberId=${member.id})}"
+                           th:classappend="${#request.getParameter('tab') != null and #request.getParameter('tab') == 'comments'}? 'active'">
                             <span>작성댓글</span>
                         </a>
-                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3" href="">
-                            <span>좋아요한 글</span>
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3"
+                           th:href="@{/members/{memberId}(tab='commentedArticles', memberId=${member.id})}"
+                           th:classappend="${#request.getParameter('tab') != null and #request.getParameter('tab') == 'commentedArticles'}? 'active'">
+                            <span>댓글단 글</span>
+                        </a>
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3"
+                           th:href="@{/members/{memberId}(tab='likedArticles', memberId=${member.id})}"
+                           th:classappend="${#request.getParameter('tab') != null and #request.getParameter('tab') == 'likedArticles'}? 'active'">
+                        <span>좋아요한 글</span>
                         </a>
                     </div>
                 </div>
-                <div class="mt-2 mb-5 pb-5 border-bottom">
-                    <table class="table table-hover rounded-top" th:if="${!articles.empty}">
-                        <thead class="table-light text-center">
-                        <tr>
-                            <th colspan="2" style="width:70%">제목</th>
-                            <th>작성일</th>
-                            <th>조회</th>
-                            <th>좋아요</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="article : ${articles}">
-                            <td class="text-center" th:text="${article.id}"></td>
-                            <td>
-                                <a href="#"
-                                   th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}"
-                                   th:text="${article.title}"></a>
-                            </td>
-                            <td class="text-center" th:text="${article.createdAt}"></td>
-                            <td class="text-center" th:text="${article.viewCount}"></td>
-                            <td class="text-center" th:text="${article.voteCount}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div th:if="${#request.getParameter('tab')} == null or ${#request.getParameter('tab')}=='articles'"
+                     class="mt-2 mb-5 pb-5 border-bottom">
+                    <table th:replace="fragments/articleTableNoAuthor :: articleTableNoAuthor"/>
+                </div>
+                <div th:if="${#request.getParameter('tab')} != null and (${#request.getParameter('tab')}=='likedArticles' or ${#request.getParameter('tab')}=='commentedArticles')"
+                     class="mt-2 mb-5 pb-5 border-bottom">
+                    <table th:replace="fragments/articleTable :: articleTable"/>
+                </div>
+                <div th:if="${#request.getParameter('tab')} !=null and ${#request.getParameter('tab')}=='comments'"
+                        class="mt-2 mb-5 pb-5 border-bottom">
+                    <table th:replace="fragments/commentTable :: commentTable"/>
                 </div>
             </div>
         </div>
     </div>
     <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
+</div>
 </body>
+<script th:inline="javascript">
+</script>
 </html>

@@ -3,20 +3,29 @@ package com.leeminjung1.web.pages;
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
 import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
 import com.leeminjung1.domain.application.dtos.CommentDto;
+import com.leeminjung1.domain.application.impl.ArticleLikeService;
 import com.leeminjung1.domain.application.impl.ArticleServiceImpl;
 import com.leeminjung1.domain.application.impl.MemberServiceImpl;
 import com.leeminjung1.domain.model.article.Article;
+import com.leeminjung1.domain.model.article.ArticleLike;
 import com.leeminjung1.domain.model.category.Category;
+import com.leeminjung1.domain.model.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,7 +34,11 @@ public class ArticleController {
 
     private final ArticleServiceImpl articleService;
     private final MemberServiceImpl memberService;
+    private final ArticleLikeService likeService;
 
+    /**
+     * 카테고리별 모든 게시글 조회
+     */
     @GetMapping("/{categoryId}")
     public String articleListByCategory(@PathVariable("categoryId") Long categoryId, Model model) {
         List<ArticleListDto> articles = articleService.findArticlesByCategory(categoryId);
@@ -35,6 +48,9 @@ public class ArticleController {
         return "articles/allArticleListByCategory";
     }
 
+    /**
+     * 모든 게시글 조회
+     */
     @GetMapping("/articles")
     public String allList(Model model) {
         List<ArticleListDto> articles = articleService.findAllArticles();
@@ -42,22 +58,67 @@ public class ArticleController {
         return "articles/allArticleList";
     }
 
+    /**
+     * 게시글 조회
+     */
     @GetMapping("/{categoryId}/v/{articleId}")
     public String article(@PathVariable("categoryId") Long categoryId,
                           @PathVariable("articleId") Long articleId,
+                          @AuthenticationPrincipal User user,
+                          HttpServletRequest request,
+                          HttpServletResponse response,
                           Model model) {
         Article article = articleService.findArticleById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
-
-        article.setViewCount(article.getViewCount() + 1);
-        articleService.updateViewCount(articleId, article);
-
         model.addAttribute("article", article);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("commentDto", new CommentDto());
+
+
+        int likeState = 0;
+        Member member = memberService.findByUsername(user.getUsername());
+        Collection<ArticleLike> likes = member.getLikes();
+        for (ArticleLike like : likes) {
+            if (Objects.equals(like.getArticle().getId(), articleId)) {
+                likeState = 1;
+                break;
+            }
+        }
+        model.addAttribute("likeState", likeState);
+
+
+        // 조회수 중복 방지
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("postView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + articleId + "]")) {
+                articleService.updateViewCount(articleId);
+                oldCookie.setValue(oldCookie.getValue() + "_[" + articleId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60);  /* 쿠키 시간 */
+                response.addCookie(oldCookie);
+            }
+        } else {
+            articleService.updateViewCount(articleId);
+            Cookie newCookie = new Cookie("postView", request.getParameter("articleId"));
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60);
+            response.addCookie(newCookie);
+        }
+
         return "articles/article";
     }
 
+    /**
+     * 글 삭제
+     */
     @PostMapping("/{categoryId}/delete/{articleId}")
     public String deleteArticle(@PathVariable("categoryId") Long categoryId,
                                 @PathVariable("articleId") Long articleId) {
@@ -65,6 +126,9 @@ public class ArticleController {
         return "redirect:/" + categoryId;
     }
 
+    /**
+     * 글 수정
+     */
     @GetMapping("/{categoryId}/update/{articleId}")
     public String updateArticle(@PathVariable("categoryId") Long categoryId,
                                 @PathVariable("articleId") Long articleId,
@@ -99,7 +163,9 @@ public class ArticleController {
     }
 
 
-
+    /**
+     * 글쓰기
+     */
     @GetMapping("/{categoryId}/new")
     public String newArticle(@PathVariable("categoryId") Long categoryId, Model model) {
         Category category = articleService.findCategoryByCategoryId(categoryId);
@@ -122,5 +188,23 @@ public class ArticleController {
         return "redirect:/" + categoryId;
     }
 
+    /**
+     * 좋아요
+     */
+    @PostMapping("/api/like/article/{articleId}")
+    public ResponseEntity<?> likeIt(@PathVariable Long articleId, @AuthenticationPrincipal User user) {
+        likeService.likeArticle(articleId, memberService.getId(user.getUsername()));
+        articleService.updateLikeCount(articleId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
+    /**
+     * 좋아요 취소
+     */
+    @DeleteMapping("/api/like/article/{articleId}")
+    public ResponseEntity<?> unlikeIt(@PathVariable Long articleId, @AuthenticationPrincipal User user) {
+        likeService.unlikeArticle(articleId, memberService.getId(user.getUsername()));
+        articleService.updateLikeCount(articleId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

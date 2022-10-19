@@ -55,7 +55,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
         Member member = new Member("admin01", "hi@test.com", passwordEncoder.encode("pass"));
         member.setRoles(Arrays.asList(adminRole));
-        member.setImgUrl("cafe_profile_363.png");
+        member.setImgUrl("user_profile_default.png");
         userRepository.save(member);
 
         Category root = Category.getRoot();
@@ -109,7 +109,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .content("<p><em><strong>hello!! this is example content:)</strong></em></p>")
                 .category(category0)
                 .createdAt(LocalDateTime.now())
-                .voteCount(0)
+                .likeCount(0)
                 .viewCount(0)
                 .build();
         articleRepository.save(article);
@@ -120,7 +120,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .content("<p>hello</p><p>world</p>")
                 .category(category0)
                 .createdAt(LocalDateTime.now())
-                .voteCount(0)
+                .likeCount(0)
                 .viewCount(0)
                 .build();
         articleRepository.save(article2);

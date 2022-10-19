@@ -1,11 +1,13 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header" />
+<script src="https://cdn.tiny.cloud/1/rqnyz8m91tstir8f7fjklu4kzpp2ntx0i16g7l9t4lcaihtp/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
-  tinymce.init({
-    selector: '#content',
-    height: 500
-  });
+tinymce.init({
+selector: '#content',
+height: 500,
+resize: false
+});
 </script>
 <body>
 <div>

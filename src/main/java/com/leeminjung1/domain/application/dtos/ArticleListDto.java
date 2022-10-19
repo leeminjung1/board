@@ -18,7 +18,8 @@ public class ArticleListDto {
     private Member author;
     private String createdAt;
     private Integer viewCount;
-    private Integer voteCount;
+    private Integer likeCount;
+    private Integer commentCount;
 
     public ArticleListDto(Article article) {
         this.id = article.getId();
@@ -27,7 +28,8 @@ public class ArticleListDto {
         this.author = article.getAuthor();
         this.createdAt = DateUtil.getDiffTime(article.getCreatedAt());
         this.viewCount = article.getViewCount();
-        this.voteCount = article.getVoteCount();
+        this.likeCount = article.getLikeCount();
+        this.commentCount = article.getComments().size();
     }
 
     public Article toEntity() {

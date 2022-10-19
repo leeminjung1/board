@@ -31,6 +31,11 @@ public class MemberServiceImpl implements MemberService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public Long getId(String username) {
+        Optional<Member> member = memberRepository.findByUsername(username);
+        return member.get().getId();
+    }
+
     public void registerAdmin(RegisterDto dto) {
         Member user = Member.builder()
                 .username(dto.getUsername())

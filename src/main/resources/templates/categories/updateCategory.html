@@ -9,7 +9,7 @@
     <div class="container">
         <form th:action="@{/manage/category}" method="post" th:object="${inputs}">
             <div class="my-3 p-2 bg-light">
-                <div id="categoryList">
+                <div id="categoryList" class="wrap">
                     <div th:if="${category.depth == 1}"
                          th:each="category : ${categoryDto.categories}">
                         <div class="px-3 py-2 border bg-white">
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="px-3 py-2 border">
-                    <a href="javascript:addCategory()"> + 카테고리 추가</a>
+                    <button class="add_category_button" type="button">+ 카테고리 추가</button>
                 </div>
             </div>
             <div>
@@ -51,7 +51,52 @@ $(function() {
     });
 });
 
-var idx = -1;
+$(document).ready(function() {
+    var add_button = $(".add_category_button");
+    var wrapper = $(".wrap");
+    $(add_button).click(function(e){
+        e.preventDefault();
+        console.log("add category on click");
+        $(wrapper).append('<div><div class="px-3 py-2 border bg-white"><form><input type="text" name="name" class="form-control"><div class="input-group-append"><button class="btn remove_field" type="reset">취소</button></div><div class="input-group-append"><button class="btn addCategoryBtn" type="button">확인</button></div></form></div></div>');
+    });
+
+    $(wrapper).on("click",".remove_field", function(e){
+        e.preventDefault();
+        $(this).parent('div').parent('form').parent('div').parent('div').remove();
+    });
+
+    $(wrapper).on("click",".addCategoryBtn", function(e){
+        e.preventDefault();
+        var name = $('form input[name=name]').val();
+        addNewCategory(name);
+    });
+});
+
+
+    function addNewCategory(name){
+    var dataArray = [];
+    var data1 = {
+        "name" : name,
+        "age"  : "21"
+    }
+    var data2 = {
+       "name" : name,
+       "age"  : "22"
+    }
+    dataArray.push(data1);
+    dataArray.push(data2);
+    var paramList = {
+       "paramList" : JSON.stringify(dataArray)
+    }
+    $.ajax({
+         type : "POST",
+         url : "/memberInfo.do",
+         data : paramList,
+         success : function(data) {},
+         error : function(e) {}
+      });
+    };
+
 
 function onclickAddCategory(){
 <!--    var name = document.getElementById('newCategoryName').value;-->
@@ -81,50 +126,6 @@ function cancelEditName(){
     document.getElementById("edit_btn").style.display = "none";
 }
 
-function addCategory() {
-    var div1 = document.createElement('div');
-    document.getElementById('categoryList').appendChild(div1);
-
-    var div = document.createElement('div');
-    div.setAttribute("class", "px-3 py-2 border bg-white");
-    div1.appendChild(div);
-
-    var form = document.createElement("form");
-    form.setAttribute("method", "");
-    form.setAttribute("th:action", "");
-    form.setAttribute("th:object", "");
-    div.appendChild(form);
-
-    var div = document.createElement("div");
-    div.setAttribute("class", "d-inline-block");
-    form.appendChild(div);
-
-    var input = document.createElement("input");
-<!--    input.setAttribute("id", "newCategoryName");-->
-    input.setAttribute("type", "text");
-    input.setAttribute("th:field", *{categories});
-    input.setAttribute("class", "form-control");
-    input.setAttribute("style", "width:300px");
-    div.appendChild(input);
-
-    var div = document.createElement("div");
-    div.setAttribute("class", "d-inline-block");
-    form.appendChild(div);
-
-    var btnSubmit = document.createElement("button");
-    btnSubmit.setAttribute("type", "button");
-    btnSubmit.setAttribute("class", "btn");
-    btnSubmit.setAttribute("id", "btnSubmit");
-    btnSubmit.setAttribute("onclick", "onclickAddCategory()");
-    btnSubmit.appendChild(document.createTextNode("확인"));
-    div.appendChild(btnSubmit);
-
-    var btnCancel = document.createElement("button");
-    btnCancel.setAttribute("type", "reset");
-    btnCancel.setAttribute("class", "btn");
-    btnCancel.appendChild(document.createTextNode("취소"));
-    div.appendChild(btnCancel);
-}
 </script>
 </div>
 </body>

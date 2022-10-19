@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<table th:fragment="articleTable" class="table table-hover rounded-top">
+    <div th:if="${#lists.isEmpty(articles)}"
+         class="bg-light p-4 text-center">
+        게시글이 없습니다.
+    </div>
+    <thead th:unless="${#lists.isEmpty(articles)}" class="table-light text-center">
+    <tr>
+        <th colspan="2">제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+        <th>조회</th>
+        <th>좋아요</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="article : ${articles}">
+        <td class="text-center" th:text="${article.id}"></td>
+        <td>
+            <a href="#"
+               th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}"
+               th:text="${article.title}"></a>
+        </td>
+        <td class="text-center" th:text="${article.author?.username}"></td>
+        <td class="text-center" th:text="${article.createdAt}"></td>
+        <td class="text-center" th:text="${article.viewCount}"></td>
+        <td class="text-center" th:text="${article.likeCount}"></td>
+    </tr>
+    </tbody>
+</table>

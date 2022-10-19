@@ -36,7 +36,7 @@ public class ArticleRequestDto {
                 .author(author)
                 .createdAt(LocalDateTime.now())
                 .viewCount(0)
-                .voteCount(0)
+                .likeCount(0)
                 .build();
     }
 

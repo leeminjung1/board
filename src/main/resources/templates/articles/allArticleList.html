@@ -3,7 +3,7 @@
 <head th:replace="fragments/header :: header" />
 <body>
 <div>
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <header th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div class="container">
         <div id="title_area">
             <h3>전체글보기</h3>
@@ -12,18 +12,18 @@
             <table class="table table-hover">
                 <thead class="table-light">
                 <tr>
-                    <th style="width:15%">category</th>
-                    <th>title</th>
-                    <th>author</th>
-                    <th style="width:10%">created at</th>
-                    <th style="width:10%">view count</th>
-                    <th style="width:10%">vote count</th>
+                    <th></th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                    <th>조회</th>
+                    <th>좋아요</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="article : ${articles}">
                     <td>
-                        <a href="#"
+                        <a class="fs-6"
                            th:href="@{/{categoryId}/ (categoryId=${article.category?.id})}"
                            th:text="${article.category?.name}"></a>
                     </td>
@@ -31,6 +31,7 @@
                         <a href="#"
                            th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}"
                            th:text="${article.title}"></a>
+                        <span class="text-info" th:text="|[${article.commentCount}]|"></span>
                     </td>
                     <td>
                         <a th:href="@{/members/{memberId}/ (memberId=${article.author?.id})}"
@@ -38,14 +39,13 @@
                     </td>
                     <td th:text="${article.createdAt}"></td>
                     <td th:text="${article.viewCount}"></td>
-                    <td th:text="${article.voteCount}"></td>
+                    <td th:text="${article.likeCount}"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
     </div>
-    <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
+    <footer th:replace="fragments/footer :: footer" />
+</div>
 </body>
 </html>

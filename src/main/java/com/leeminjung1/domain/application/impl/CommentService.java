@@ -1,12 +1,17 @@
 package com.leeminjung1.domain.application.impl;
 
 import com.leeminjung1.domain.application.dtos.CommentDto;
+import com.leeminjung1.domain.application.dtos.CommentListDto;
+import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.comment.Comment;
 import com.leeminjung1.infrastructure.repository.ArticleRepository;
 import com.leeminjung1.infrastructure.repository.CommentRepository;
 import com.leeminjung1.infrastructure.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,4 +36,15 @@ public class CommentService {
 
         commentRepository.save(comment);
     }
+
+    public List<CommentListDto> findAllCommentByMemberId(Long memberId) {
+        List<Comment> comments = commentRepository.findAllCommentByMemberId(memberId);
+        List<CommentListDto> list = new ArrayList<>();
+        for (Comment comment : comments) {
+            CommentListDto commentListDto = new CommentListDto(comment);
+            list.add(commentListDto);
+        }
+        return list;
+    }
+
 }

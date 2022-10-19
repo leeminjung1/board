@@ -1,5 +1,6 @@
 package com.leeminjung1.domain.model.article;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.domain.model.comment.Comment;
 import com.leeminjung1.domain.model.file.File;
@@ -9,6 +10,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -39,20 +41,24 @@ public class Article {
 
     private LocalDateTime createdAt;
     private Integer viewCount;
-    private Integer voteCount;
+    private Integer likeCount;
+
+    @OneToMany(mappedBy = "article")
+    @JsonIgnore
+    private Collection<ArticleLike> likes;
 
     @OneToMany(mappedBy = "article")
     private List<File> files = new ArrayList<>();
 
     @Builder
-    public Article(String title, String content, Category category, Member author, LocalDateTime createdAt, Integer viewCount, Integer voteCount) {
+    public Article(String title, String content, Category category, Member author, LocalDateTime createdAt, Integer viewCount, Integer likeCount) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.author = author;
         this.createdAt = createdAt;
         this.viewCount = viewCount;
-        this.voteCount = voteCount;
+        this.likeCount = likeCount;
     }
 
     public void updateViewCount(Integer viewCount) {

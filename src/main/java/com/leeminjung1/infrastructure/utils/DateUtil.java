@@ -19,4 +19,8 @@ public class DateUtil {
         }
         return localDateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
     }
+
+    public static String getDateTimeToString(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
+    }
 }

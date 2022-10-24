@@ -24,6 +24,10 @@ resize: false
         <form class="my-5" method="post" th:action="@{/{categoryId}/new (categoryId=${category.id})}" th:object="${article}">
             <div class="row row-cols-1 gap-4">
                 <div class="col">
+                    <label>공지로 등록</label>
+                    <input class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for notice" th:field="*{isNotice}">
+                </div>
+                <div class="col">
                     <label class="form-label" for="title">제목</label>
                     <input class="form-control" type="text" id="title" placeholder="제목을 입력해주세요." th:field="*{title}">
                 </div>

@@ -20,6 +20,27 @@
                     <th>좋아요</th>
                 </tr>
                 </thead>
+                <tobdy>
+                    <tr th:each="notice : ${notices}" class="bg-light">
+                        <td class="text-danger fw-bold">공지</td>
+                        <td>
+                            <a href="#"
+                               class="text-danger fw-bold"
+                               th:href="@{/{categoryId}/v/{articleId} (categoryId=${notice.category?.id},articleId=${notice.id})}"
+                               th:text="${notice.title}">
+                            </a>
+                            <span class="text-info" th:text="|[${notice.commentCount}]|"></span>
+                        </td>
+                        <td>
+                            <a th:href="@{/members/{memberId}/ (memberId=${notice.author?.id})}"
+                               th:text="${notice.author?.username}"></a>
+                        </td>
+                        <td th:text="${notice.createdAt}"></td>
+                        <td th:text="${notice.viewCount}"></td>
+                        <td th:text="${notice.likeCount}"></td>
+                    </tr>
+                </tobdy>
+
                 <tbody>
                 <tr th:each="article : ${articles}">
                     <td>

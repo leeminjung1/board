@@ -4,7 +4,8 @@ import com.leeminjung1.domain.application.dtos.ArticleListDto;
 import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
 import com.leeminjung1.domain.application.dtos.CommentDto;
 import com.leeminjung1.domain.application.impl.ArticleLikeService;
-import com.leeminjung1.domain.application.impl.ArticleServiceImpl;
+import com.leeminjung1.domain.application.impl.ArticleService;
+import com.leeminjung1.domain.application.impl.CommentService;
 import com.leeminjung1.domain.application.impl.MemberServiceImpl;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.article.ArticleLike;
@@ -32,12 +33,13 @@ import java.util.Objects;
 @Slf4j
 public class ArticleController {
 
-    private final ArticleServiceImpl articleService;
+    private final ArticleService articleService;
     private final MemberServiceImpl memberService;
     private final ArticleLikeService likeService;
+    private final CommentService commentService;
 
     /**
-     * 카테고리별 모든 게시글 조회
+     * 카테고리별 모든 게시글 리스트 조회
      */
     @GetMapping("/{categoryId}")
     public String articleListByCategory(@PathVariable("categoryId") Long categoryId, Model model) {
@@ -45,6 +47,8 @@ public class ArticleController {
         model.addAttribute("articles", articles);
         Category category = articleService.findCategoryByCategoryId(categoryId);
         model.addAttribute("category", category);
+        List<ArticleListDto> noticeArticles = articleService.findNoticeArticleDtos();
+        model.addAttribute("notices", noticeArticles);
         return "articles/allArticleListByCategory";
     }
 
@@ -55,6 +59,8 @@ public class ArticleController {
     public String allList(Model model) {
         List<ArticleListDto> articles = articleService.findAllArticles();
         model.addAttribute("articles", articles);
+        List<ArticleListDto> noticeArticles = articleService.findNoticeArticleDtos();
+        model.addAttribute("notices", noticeArticles);
         return "articles/allArticleList";
     }
 
@@ -142,6 +148,7 @@ public class ArticleController {
                 .category(article.getCategory())
                 .content(article.getContent())
                 .title(article.getTitle())
+                .isNotice(article.getIsNotice())
                 .build();
 
         model.addAttribute("article", dto);
@@ -170,7 +177,6 @@ public class ArticleController {
     public String newArticle(@PathVariable("categoryId") Long categoryId, Model model) {
         Category category = articleService.findCategoryByCategoryId(categoryId);
         model.addAttribute("category", category);
-
         model.addAttribute("article", new ArticleRequestDto());
         return "articles/newArticle";
     }
@@ -205,6 +211,16 @@ public class ArticleController {
     public ResponseEntity<?> unlikeIt(@PathVariable Long articleId, @AuthenticationPrincipal User user) {
         likeService.unlikeArticle(articleId, memberService.getId(user.getUsername()));
         articleService.updateLikeCount(articleId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 댓글 삭제
+     */
+    @DeleteMapping("api/delete/comment")
+    public ResponseEntity<?> deleteComment(HttpServletRequest request) {
+        Long commentId = Long.valueOf(request.getParameter("commentId"));
+        commentService.deleteComment(commentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

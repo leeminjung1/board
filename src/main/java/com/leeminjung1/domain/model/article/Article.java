@@ -50,15 +50,18 @@ public class Article {
     @OneToMany(mappedBy = "article")
     private List<File> files = new ArrayList<>();
 
+    private Byte isNotice;
+
     @Builder
-    public Article(String title, String content, Category category, Member author, LocalDateTime createdAt, Integer viewCount, Integer likeCount) {
+    public Article(String title, String content, Category category, Member author, LocalDateTime createdAt, Integer viewCount, Integer likeCount, Byte isNotice) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.author = author;
         this.createdAt = createdAt;
-        this.viewCount = viewCount;
-        this.likeCount = likeCount;
+        this.viewCount = 0;
+        this.likeCount = 0;
+        this.isNotice = isNotice;
     }
 
     public void updateViewCount(Integer viewCount) {

@@ -3,30 +3,22 @@ package com.leeminjung1.web.pages;
 import com.leeminjung1.config.BackedLoginService;
 import com.leeminjung1.domain.application.dtos.*;
 import com.leeminjung1.domain.application.impl.ArticleLikeService;
-import com.leeminjung1.domain.application.impl.ArticleServiceImpl;
+import com.leeminjung1.domain.application.impl.ArticleService;
 import com.leeminjung1.domain.application.impl.CommentService;
 import com.leeminjung1.domain.application.impl.MemberServiceImpl;
-import com.leeminjung1.domain.model.article.Article;
-import com.leeminjung1.domain.model.comment.Comment;
 import com.leeminjung1.domain.model.member.Member;
-import com.leeminjung1.domain.model.member.Role;
-import com.leeminjung1.domain.model.member.RoleName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,7 +27,7 @@ public class MemberController {
 
     private final MemberServiceImpl memberService;
     private final BackedLoginService loginService;
-    private final ArticleServiceImpl articleService;
+    private final ArticleService articleService;
     private final PasswordEncoder passwordEncoder;
     private final CommentService commentService;
     private final ArticleLikeService likeService;

@@ -100,7 +100,9 @@
                                     </a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="">수정</a>
-                                        <a class="dropdown-item" href="">삭제</a>
+                                        <a class="dropdown-item"
+                                           href="void(0)"
+                                           th:onclick="deleteComment([[${comment.id}]])">삭제</a>
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +136,10 @@
                                             </a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="">수정</a>
-                                                <a class="dropdown-item" href="">삭제</a>
+                                                <a class="dropdown-item"
+                                                   href="void(0)"
+                                                   th:onclick="deleteComment([[${child.id}]])">삭제</a>
+
                                             </div>
                                         </div>
 
@@ -246,41 +251,54 @@ $(document).ready(function() {
 });
 
 function toggle(id) {
-        if(document.getElementById("reply"+id).style.display =='none' ){
-            document.getElementById("reply"+id).style.display ='block';
-        } else{
-            document.getElementById("reply"+id).style.display ='none';
-        }
+    if(document.getElementById("reply"+id).style.display =='none' ){
+        document.getElementById("reply"+id).style.display ='block';
+    } else{
+        document.getElementById("reply"+id).style.display ='none';
     }
+}
 
-    function like_on_off(){
-        let likeIcon = $("#like-icon");
-        if (likeIcon.hasClass("far")) {
-            $.ajax({
-                type: "post",
-                url: `/api/like/article/[[${article.id}]]`,
-            }).done(res=>{
-                let likeCountStr = $("#like-count").text();
-			    let likeCount = Number(likeCountStr) + 1;
-			    $("#like-count").text(likeCount);
-                likeIcon.removeClass("far").addClass("fas active");
-            }).fail(error=>{
-                console.log("오류", error);
-            });
-        } else {
-            $.ajax({
-                type: "delete",
-                url: `/api/like/article/[[${article.id}]]`,
-            }).done(res=>{
-                let likeCountStr = $("#like-count").text();
-			    let likeCount = Number(likeCountStr) - 1;
-			    $("#like-count").text(likeCount);
-                likeIcon.removeClass("fas active").addClass("far");
-            }).fail(error=>{
-                console.log("오류", error);
-            });
-        }
+function like_on_off(){
+    let likeIcon = $("#like-icon");
+    if (likeIcon.hasClass("far")) {
+        $.ajax({
+            type: "post",
+            url: `/api/like/article/[[${article.id}]]`,
+        }).done(res=>{
+            let likeCountStr = $("#like-count").text();
+            let likeCount = Number(likeCountStr) + 1;
+            $("#like-count").text(likeCount);
+            likeIcon.removeClass("far").addClass("fas active");
+        }).fail(error=>{
+            console.log("오류", error);
+        });
+    } else {
+        $.ajax({
+            type: "delete",
+            url: `/api/like/article/[[${article.id}]]`,
+        }).done(res=>{
+            let likeCountStr = $("#like-count").text();
+            let likeCount = Number(likeCountStr) - 1;
+            $("#like-count").text(likeCount);
+            likeIcon.removeClass("fas active").addClass("far");
+        }).fail(error=>{
+            console.log("오류", error);
+        });
     }
+}
+
+function deleteComment(commentId){
+    $.ajax({
+        type: "delete",
+        url: "/api/delete/comment",
+        data: {"commentId": commentId}
+    }).done(res=>{
+        console.log("성공");
+        window.location.reload();
+    }).fail(error=>{
+        console.log("오류", error);
+    });
+}
 
 </script>
 </html>

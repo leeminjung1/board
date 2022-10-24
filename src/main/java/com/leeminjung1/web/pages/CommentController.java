@@ -1,7 +1,6 @@
 package com.leeminjung1.web.pages;
 
 import com.leeminjung1.domain.application.dtos.CommentDto;
-import com.leeminjung1.domain.application.impl.ArticleServiceImpl;
 import com.leeminjung1.domain.application.impl.CategoryService;
 import com.leeminjung1.domain.application.impl.CommentService;
 import com.leeminjung1.domain.application.impl.MemberServiceImpl;
@@ -12,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor

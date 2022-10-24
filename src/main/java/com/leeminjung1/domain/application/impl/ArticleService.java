@@ -1,6 +1,5 @@
 package com.leeminjung1.domain.application.impl;
 
-import com.leeminjung1.domain.application.ArticleService;
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
@@ -20,20 +19,18 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ArticleServiceImpl implements ArticleService {
+public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     private final ArticleLikeRepository likeRepository;
 
-    @Override
     public Optional<Article> findArticleById(long articleId) {
         Optional<Article> article = articleRepository.findById(articleId);
         return article;
     }
 
-    @Override
     public List<ArticleListDto> findAllArticles() {
         List<Article> articles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         List<ArticleListDto> list = new ArrayList<>();
@@ -43,7 +40,6 @@ public class ArticleServiceImpl implements ArticleService {
         return list;
     }
 
-    @Override
     public List<ArticleListDto> findArticlesByCategory(Long categoryId) {
         List<Article> articles = articleRepository.findByCategoryIdOrderByIdDesc(categoryId);
         List<ArticleListDto> list = new ArrayList<>();
@@ -75,9 +71,9 @@ public class ArticleServiceImpl implements ArticleService {
         return categoryRepository.findById(categoryId).orElseThrow();
     }
 
-    @Override
-    public void save(Article article) {
-        articleRepository.save(article);
+    public Long save(Article article) {
+        Article save = articleRepository.save(article);
+        return save.getId();
     }
 
     public List<ArticleListDto> findArticlesByAuthorId(Long authorId) {
@@ -106,4 +102,16 @@ public class ArticleServiceImpl implements ArticleService {
         articleRepository.save(article);
     }
 
+    public List<ArticleListDto> findNoticeArticleDtos() {
+        List<Article> notices = articleRepository.findByIsNotice((byte) 1);
+        List<ArticleListDto> list = new ArrayList<>();
+        for (Article article : notices) {
+            list.add(new ArticleListDto(article));
+        }
+        return list;
+    }
+
+    public List<Article> findNoticeArticles() {
+        return articleRepository.findByIsNotice((byte) 1);
+    }
 }

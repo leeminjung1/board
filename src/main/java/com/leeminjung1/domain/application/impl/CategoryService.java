@@ -21,6 +21,15 @@ public class CategoryService {
     private final ArticleRepository articleRepository;
     private final CategoryRepository categoryRepository;
 
+    public void save(Category category) {
+        categoryRepository.save(category);
+    }
+
+    public Category findByCategoryName(String name) {
+        Category category = categoryRepository.findByName(name);
+        return category;
+    }
+
     public Long findCategoryIdByArticleId(Long articleId) {
         Optional<Article> article = articleRepository.findById(articleId);
         return article.get().getCategory().getId();

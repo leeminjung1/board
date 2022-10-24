@@ -122,6 +122,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .createdAt(LocalDateTime.now())
                 .likeCount(0)
                 .viewCount(0)
+                .isNotice((byte) 1)
                 .build();
         articleRepository.save(article2);
 

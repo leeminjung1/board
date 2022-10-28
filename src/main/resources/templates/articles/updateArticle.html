@@ -10,32 +10,45 @@ resize: false
 });
 </script>
 <body>
-<div>
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+<div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div class="container">
-        <div class="mb-2">
-            <a class="fs-3"
-               th:href="@{/{categoryId}/ (categoryId=${categoryId})}"></a>
-        </div>
-        <div class="mt-2">
-            <h3>글쓰기</h3>
-        </div>
-        <form class="my-5" method="post" th:action="@{/{categoryId}/update/{articleId} (categoryId=${categoryId}, articleId=${articleId})}" th:object="${article}">
-            <div class="row row-cols-1 gap-4">
-                <div class="col">
-                    <label class="form-label" for="title">제목</label>
-                    <input class="form-control" type="text" id="title" placeholder="제목을 입력해주세요." th:field="*{title}">
-                </div>
-                <div class="col">
-                    <textarea id="content" th:field="*{content}" placeholder="내용을 입력해주세요."></textarea>
-                </div>
+        <div>
+            <div class="mb-2">
+                <a class="fs-3"
+                   th:text="${article.category?.name}"
+                   th:href="@{/{categoryId}/ (categoryId=${categoryId})}"></a>
             </div>
-            <div class="mt-5 d-flex gap-3 justify-content-end">
-                <button type="submit" class="btn btn-primary">등록</button>
+            <div class="mt-2">
+                <h3>글쓰기</h3>
             </div>
-        </form>
+            <div class="mt-5">
+                <form method="post" th:action="@{/{categoryId}/update/{articleId} (categoryId=${categoryId}, articleId=${articleId})}" th:object="${article}">
+                    <div class="overflow-auto">
+                        <div class="float-start" style="width:900px;">
+                            <div class="categoryList">
+                                <div th:replace="fragments/categoryListDropDown :: categoryListDropDown"></div>
+                            </div>
+                            <div class="mt-3">
+                                <input class="form-control" type="text" id="title" placeholder="제목을 입력해주세요." th:field="*{title}">
+                            </div>
+                            <div class="mt-3">
+                                <textarea id="content" th:field="*{content}" placeholder="내용을 입력해주세요."></textarea>
+                            </div>
+                        </div>
+                        <div class="float-end" style="width:200px;">
+                            <div class="bg-light p-4">
+                                <input class="form-check-input mt-0" type="checkbox" th:field="${article.isNotice}">
+                                <label th:for="isNotice">공지로 등록</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <button type="submit" class="btn btn-primary">등록</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div th:replace="fragments/footer :: footer" />
-</div>
+<div th:replace="fragments/footer :: footer" />
 </body>
 </html>

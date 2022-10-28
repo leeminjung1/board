@@ -2,17 +2,16 @@ package com.leeminjung1.web.pages;
 
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
 import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
+import com.leeminjung1.domain.application.dtos.CategoryDto;
 import com.leeminjung1.domain.application.dtos.CommentDto;
-import com.leeminjung1.domain.application.impl.ArticleLikeService;
-import com.leeminjung1.domain.application.impl.ArticleService;
-import com.leeminjung1.domain.application.impl.CommentService;
-import com.leeminjung1.domain.application.impl.MemberServiceImpl;
+import com.leeminjung1.domain.application.impl.*;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.article.ArticleLike;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.domain.model.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,6 +33,7 @@ import java.util.Objects;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final CategoryService categoryService;
     private final MemberServiceImpl memberService;
     private final ArticleLikeService likeService;
     private final CommentService commentService;
@@ -56,10 +56,13 @@ public class ArticleController {
      * 모든 게시글 조회
      */
     @GetMapping("/articles")
-    public String allList(Model model) {
-        List<ArticleListDto> articles = articleService.findAllArticles();
+    public String allList(Model model, Pageable pageable) {
+        model.addAttribute("totalArticleCount", articleService.countAll());
+
+        List<ArticleListDto> articles = articleService.findAllArticles(pageable).getContent();
         model.addAttribute("articles", articles);
-        List<ArticleListDto> noticeArticles = articleService.findNoticeArticleDtos();
+
+        List<ArticleListDto> noticeArticles = articleService.findNoticeArticleTop20();
         model.addAttribute("notices", noticeArticles);
         return "articles/allArticleList";
     }
@@ -151,6 +154,8 @@ public class ArticleController {
                 .isNotice(article.getIsNotice())
                 .build();
 
+        CategoryDto categoryDto = categoryService.getCategoryDto();
+        model.addAttribute("categoryDto", categoryDto);
         model.addAttribute("article", dto);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("articleId", articleId);
@@ -165,6 +170,13 @@ public class ArticleController {
         Article article = articleService.findArticleById(articleId).orElseThrow();
         article.setTitle(articleRequestDto.getTitle());
         article.setContent(articleRequestDto.getContent());
+        if (articleRequestDto.getIsNotice()) {
+            article.setIsNotice((byte) 1);
+        } else {
+            article.setIsNotice((byte) 0);
+        }
+        article.setCategory(articleRequestDto.getCategory());
+
         articleService.save(article);
         return "redirect:/" + categoryId + "/v/" + articleId;
     }

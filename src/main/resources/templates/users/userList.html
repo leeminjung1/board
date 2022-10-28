@@ -13,6 +13,8 @@
                 <th>email</th>
                 <th>createdDate</th>
                 <th>lastPasswordChanged</th>
+                <th>게시글수</th>
+                <th>댓글수</th>
             </tr>
             </thead>
             <tbody>
@@ -25,6 +27,8 @@
                 <td th:text="${member.email}"></td>
                 <td th:text="${member.createdDate}"></td>
                 <td th:text="${member.lastPasswordChanged}"></td>
+                <td th:text="${#lists.size(member.articles)}"></td>
+                <td th:text="${#lists.size(member.comments)}"></td>
             </tr>
             </tbody>
         </table>

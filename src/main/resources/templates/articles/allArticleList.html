@@ -6,7 +6,28 @@
     <header th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div class="container">
         <div id="title_area">
-            <h3>전체글보기</h3>
+            <h3 class="fw-bold">전체글보기</h3>
+        </div>
+        <div>
+            <div class="float-start">
+                <span th:text="${#numbers.formatInteger(totalArticleCount, 0, 'COMMA')}" class="fw-semibold"></span>
+                <span>개의 글</span>
+            </div>
+            <div class="float-end">
+                <div class="d-inline-block">
+                    <input type="checkbox" id="hideNotice" onclick="toggleCheckbox(this)">
+                    <label for="hideNotice">공지 숨기기</label>
+                </div>
+                <div class="ms-3 ps-3 border-start d-inline-block">
+                    <select id="size" class="form-control" onchange="selectSize()">
+                        <option value="" selected="selected" hidden="hidden" th:text="|${param.size==null?20:param.size}개씩|"></option>
+                        <option value="10" >10개씩</option>
+                        <option value="20">20개씩</option>
+                        <option value="30">30개씩</option>
+                        <option value="50">50개씩</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div id="article_list_area">
             <table class="table table-hover">
@@ -20,7 +41,7 @@
                     <th>좋아요</th>
                 </tr>
                 </thead>
-                <tobdy>
+                <tbody id="noticeArticles">
                     <tr th:each="notice : ${notices}" class="bg-light">
                         <td class="text-danger fw-bold">공지</td>
                         <td>
@@ -39,10 +60,9 @@
                         <td th:text="${notice.viewCount}"></td>
                         <td th:text="${notice.likeCount}"></td>
                     </tr>
-                </tobdy>
-
+                </tbody>
                 <tbody>
-                <tr th:each="article : ${articles}">
+                    <tr th:each="article : ${articles}">
                     <td>
                         <a class="fs-6"
                            th:href="@{/{categoryId}/ (categoryId=${article.category?.id})}"
@@ -65,8 +85,98 @@
                 </tbody>
             </table>
         </div>
+        <div>
+            <nav th:replace="fragments/pagination::pagination"></nav>
+        </div>
     </div>
     <footer th:replace="fragments/footer :: footer" />
 </div>
 </body>
+<script th:inline="javascript">
+$(document).ready(function() {
+    console.log([[${totalArticleCount}]]+"개의 글");
+    var currentPage;
+    if([[${param.page}]] == null) {
+        currentPage = 1;
+    } else {
+        currentPage = [[${param.page}]];
+    }
+    renderPagination(currentPage);
+});
+
+function renderPagination(currentPage) {
+    var _totalCount = [[${totalArticleCount}]];
+    var _size = 20;
+    if([[${param.size}]] != null) {
+        _size = [[${param.size}]];
+    }
+
+    if (_totalCount <= _size) return;
+
+    var totalPage = Math.ceil(_totalCount / _size);
+    var pageGroup = Math.ceil(currentPage / 10);
+
+    var last = pageGroup * 10;
+    if (last > totalPage) last = totalPage;
+    var first = last - (10 - 1) <= 0 ? 0 : last - (10 - 1);
+    var next = last + 1;
+    var prev = first - 1;
+
+    const fragmentPage = document.createDocumentFragment();
+    if (prev > 0) {
+        var allpreli = document.createElement('li');
+        allpreli.classList.add('page-item');
+        allpreli.insertAdjacentHTML("beforeend", `<a href="/articles?page=${1}&size=${_size}" id='allprev' class='page-link'>&lt;&lt;</a>`);
+
+        var preli = document.createElement('li');
+        preli.classList.add('page-item');
+        preli.insertAdjacentHTML("beforeend", `<a href="/articles?page=${prev}&size=${_size}" id='prev' class='page-link'>&lt;</a>`);
+
+        fragmentPage.appendChild(allpreli);
+        fragmentPage.appendChild(preli);
+    }
+
+    for (var i = first; i <= last; i++) {
+        const li = document.createElement("li");
+        li.classList.add('page-item');
+        li.insertAdjacentHTML("beforeend", `<a href="/articles?page=${i}&size=${_size}" id='page-${i}' data-num='${i}' class='page-link'>${i}</a>`);
+        fragmentPage.appendChild(li);
+    }
+
+    if (last < totalPage) {
+        var allendli = document.createElement('li');
+        allendli.classList.add('page-item');
+        allendli.insertAdjacentHTML("beforeend", `<a href="/articles?page=${totalPage}&size=${_size}" id='allnext' class='page-link'>&gt;&gt;</a>`);
+
+        var endli = document.createElement('li');
+        endli.classList.add('page-item');
+        endli.insertAdjacentHTML("beforeend", `<a href="/articles?page=${next}&size=${_size}" id='next' class='page-link'>&gt;</a>`);
+
+        fragmentPage.appendChild(endli);
+        fragmentPage.appendChild(allendli);
+    }
+
+    document.getElementById('js-pagination').appendChild(fragmentPage);
+    // 페이지 목록 생성
+
+    $(`#js-pagination a`).removeClass("active");
+    $(`#js-pagination a#page-${currentPage}`).addClass("active");
+
+};
+
+function toggleCheckbox(element) {
+    console.log(element.checked);
+    if (element.checked) {
+        document.getElementById("noticeArticles").style.display = "none";
+    } else {
+        document.getElementById("noticeArticles").style.display = "table-row-group";
+    }
+}
+
+function selectSize() {
+    var size = document.getElementById('size');
+    if(size.value) location.href=('/articles?page=1&size=' + size.value);
+}
+
+</script>
 </html>

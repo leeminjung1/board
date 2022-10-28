@@ -8,6 +8,8 @@ import com.leeminjung1.infrastructure.repository.ArticleRepository;
 import com.leeminjung1.infrastructure.repository.CategoryRepository;
 import com.leeminjung1.infrastructure.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -26,18 +29,18 @@ public class ArticleService {
     private final CommentRepository commentRepository;
     private final ArticleLikeRepository likeRepository;
 
+    public long countAll() {
+        return articleRepository.count();
+    }
+
     public Optional<Article> findArticleById(long articleId) {
         Optional<Article> article = articleRepository.findById(articleId);
         return article;
     }
 
-    public List<ArticleListDto> findAllArticles() {
-        List<Article> articles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        List<ArticleListDto> list = new ArrayList<>();
-        for (Article article : articles) {
-            list.add(new ArticleListDto(article));
-        }
-        return list;
+    public Page<ArticleListDto> findAllArticles(Pageable pageable) {
+//        List<Article> articles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        return articleRepository.findAllByOrderByCreatedAtDesc(pageable).map(ArticleListDto::new);
     }
 
     public List<ArticleListDto> findArticlesByCategory(Long categoryId) {
@@ -100,6 +103,10 @@ public class ArticleService {
         Article article = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다"));
         article.setLikeCount(likeRepository.findAllByArticleId(id).size());
         articleRepository.save(article);
+    }
+
+    public List<ArticleListDto> findNoticeArticleTop20() {
+        return articleRepository.findTop20ByIsNoticeOrderByCreatedAtDesc((byte) 1).stream().map(ArticleListDto::new).collect(Collectors.toList());
     }
 
     public List<ArticleListDto> findNoticeArticleDtos() {

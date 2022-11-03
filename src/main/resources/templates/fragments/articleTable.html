@@ -19,10 +19,10 @@
         <td class="text-center" th:text="${article.id}"></td>
         <td>
             <a href="#"
-               th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}"
+               th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.categoryId},articleId=${article.id})}"
                th:text="${article.title}"></a>
         </td>
-        <td class="text-center" th:text="${article.author?.username}"></td>
+        <td class="text-center" th:text="${article.authorName}"></td>
         <td class="text-center" th:text="${article.createdAt}"></td>
         <td class="text-center" th:text="${article.viewCount}"></td>
         <td class="text-center" th:text="${article.likeCount}"></td>

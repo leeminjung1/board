@@ -21,6 +21,14 @@ public class CommentService {
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
 
+    public long countAllByWriterId(Long writerId) {
+        return commentRepository.countByWriterId(writerId);
+    }
+
+    public Long countCommentByArticleId(Long articleId) {
+        return commentRepository.countCommentByArticleId(articleId);
+    }
+
     public void addComment(Long authorId, Long articleId, CommentDto commentDto) {
         Comment comment = Comment.builder()
                 .content(commentDto.getContent())

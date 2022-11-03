@@ -9,6 +9,7 @@ import com.leeminjung1.domain.application.impl.MemberServiceImpl;
 import com.leeminjung1.domain.model.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -75,14 +76,18 @@ public class MemberController {
     @GetMapping("/members/{memberId}")
     public String memberActivity(@PathVariable("memberId") Long memberId,
                                  String tab,
-                                 Model model) {
+                                 Model model,
+                                 Pageable pageable) {
         Member member = memberService.findById(memberId).orElseThrow();
         model.addAttribute("member", member);
 
         if (tab == null || tab.equals("articles")) {
-            model.addAttribute("articles", articleService.findArticlesByAuthorId(memberId));
+            model.addAttribute("articles", articleService.findArticlesByAuthorId(pageable, memberId));
+            model.addAttribute("totalArticleCount", articleService.countAllByAuthorId(memberId));
         } else if (tab.equals("commentedArticles")) {
             model.addAttribute("articles", articleService.findArticlesThatCommentedByMemberId(memberId));
+            model.addAttribute("totalArticleCount", commentService.countAllByWriterId(memberId));
+
         } else if (tab.equals("likedArticles")) {
             model.addAttribute("articles", articleService.findArticlesThatLikedByMemberId(memberId));
         } else if (tab.equals("comments")) {

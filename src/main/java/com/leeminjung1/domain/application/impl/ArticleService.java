@@ -1,12 +1,14 @@
 package com.leeminjung1.domain.application.impl;
 
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
+import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.infrastructure.repository.ArticleLikeRepository;
 import com.leeminjung1.infrastructure.repository.ArticleRepository;
 import com.leeminjung1.infrastructure.repository.CategoryRepository;
 import com.leeminjung1.infrastructure.repository.CommentRepository;
+import com.leeminjung1.infrastructure.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -33,23 +36,27 @@ public class ArticleService {
         return articleRepository.count();
     }
 
+    public long countAllByCategoryId(Long categoryId) {
+        return articleRepository.countByCategoryId(categoryId);
+    }
+
+    public long countAllByAuthorId(Long authorId) {
+        return articleRepository.countByAuthorId(authorId);
+    }
+
     public Optional<Article> findArticleById(long articleId) {
         Optional<Article> article = articleRepository.findById(articleId);
         return article;
     }
 
     public Page<ArticleListDto> findAllArticles(Pageable pageable) {
-//        List<Article> articles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        return articleRepository.findAllByOrderByCreatedAtDesc(pageable).map(ArticleListDto::new);
+        Page<Article> articles = articleRepository.findAllByOrderByIdDesc(pageable);
+        return articles.map(ArticleListDto::new);
     }
 
-    public List<ArticleListDto> findArticlesByCategory(Long categoryId) {
-        List<Article> articles = articleRepository.findByCategoryIdOrderByIdDesc(categoryId);
-        List<ArticleListDto> list = new ArrayList<>();
-        for (Article article : articles) {
-            list.add(new ArticleListDto(article));
-        }
-        return list;
+    public Page<ArticleListDto> findArticlesByCategory(Pageable pageable, Long categoryId) {
+        Page<Article> articles = articleRepository.findByCategoryIdOrderByIdDesc(pageable, categoryId);
+        return articles.map(ArticleListDto::new);
     }
 
     public List<ArticleListDto> findArticlesThatCommentedByMemberId(Long memberId) {
@@ -79,13 +86,9 @@ public class ArticleService {
         return save.getId();
     }
 
-    public List<ArticleListDto> findArticlesByAuthorId(Long authorId) {
-        List<Article> articles = articleRepository.findByAuthorId(authorId);
-        List<ArticleListDto> list = new ArrayList<>();
-        for (Article article : articles) {
-            list.add(new ArticleListDto(article));
-        }
-        return list;
+    public Page<ArticleListDto> findArticlesByAuthorId(Pageable pageable, Long authorId) {
+        Page<Article> articles = articleRepository.findByAuthorIdOrderByIdDesc(pageable, authorId);
+        return articles.map(ArticleListDto::new);
     }
 
     @Transactional
@@ -106,7 +109,7 @@ public class ArticleService {
     }
 
     public List<ArticleListDto> findNoticeArticleTop20() {
-        return articleRepository.findTop20ByIsNoticeOrderByCreatedAtDesc((byte) 1).stream().map(ArticleListDto::new).collect(Collectors.toList());
+        return articleRepository.findTop20ByIsNoticeOrderByIdDesc((byte) 1).stream().map(ArticleListDto::new).collect(Collectors.toList());
     }
 
     public List<ArticleListDto> findNoticeArticleDtos() {

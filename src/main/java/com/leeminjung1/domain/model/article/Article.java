@@ -6,6 +6,7 @@ import com.leeminjung1.domain.model.comment.Comment;
 import com.leeminjung1.domain.model.file.File;
 import com.leeminjung1.domain.model.member.Member;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -42,6 +43,9 @@ public class Article {
     private LocalDateTime createdAt;
     private Integer viewCount;
     private Integer likeCount;
+
+    @Formula("(select count(*) from comment c where c.article_id = id)")
+    private Long commentCount;
 
     @OneToMany(mappedBy = "article")
     @JsonIgnore

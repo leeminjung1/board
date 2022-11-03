@@ -42,12 +42,16 @@ public class ArticleController {
      * 카테고리별 모든 게시글 리스트 조회
      */
     @GetMapping("/{categoryId}")
-    public String articleListByCategory(@PathVariable("categoryId") Long categoryId, Model model) {
-        List<ArticleListDto> articles = articleService.findArticlesByCategory(categoryId);
+    public String articleListByCategory(@PathVariable("categoryId") Long categoryId, Model model, Pageable pageable) {
+        model.addAttribute("totalArticleCount", articleService.countAllByCategoryId(categoryId));
+
+        List<ArticleListDto> articles = articleService.findArticlesByCategory(pageable, categoryId).getContent();
         model.addAttribute("articles", articles);
+
         Category category = articleService.findCategoryByCategoryId(categoryId);
         model.addAttribute("category", category);
-        List<ArticleListDto> noticeArticles = articleService.findNoticeArticleDtos();
+
+        List<ArticleListDto> noticeArticles = articleService.findNoticeArticleTop20();
         model.addAttribute("notices", noticeArticles);
         return "articles/allArticleListByCategory";
     }

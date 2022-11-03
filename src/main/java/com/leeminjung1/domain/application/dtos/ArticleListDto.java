@@ -3,8 +3,11 @@ package com.leeminjung1.domain.application.dtos;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.domain.model.member.Member;
+import com.leeminjung1.infrastructure.repository.CommentRepository;
 import com.leeminjung1.infrastructure.utils.DateUtil;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -14,29 +17,26 @@ import java.time.LocalDateTime;
 public class ArticleListDto {
     private Long id;
     private String title;
-    private Category category;
-    private Member author;
+    private Long categoryId;
+    private String categoryName;
+    private Long authorId;
+    private String authorName;
     private String createdAt;
     private Integer viewCount;
     private Integer likeCount;
-    private Integer commentCount;
+    private Long commentCount;
 
     public ArticleListDto(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();
-        this.category = article.getCategory();
-        this.author = article.getAuthor();
+        this.categoryId = article.getCategory().getId();
+        this.categoryName = article.getCategory().getName();
+        this.authorId = article.getAuthor().getId();
+        this.authorName = article.getAuthor().getUsername();
         this.createdAt = DateUtil.getDiffTime(article.getCreatedAt());
         this.viewCount = article.getViewCount();
         this.likeCount = article.getLikeCount();
-        this.commentCount = article.getComments().size();
+        this.commentCount = article.getCommentCount();
     }
 
-    public Article toEntity() {
-        return Article.builder()
-                .title(title)
-                .category(category)
-                .author(author)
-                .build();
-    }
 }

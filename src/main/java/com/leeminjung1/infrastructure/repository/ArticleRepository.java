@@ -13,10 +13,11 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long>{
-    List<Article> findByCategoryIdOrderByIdDesc(Long categoryId);
-    List<Article> findByAuthorId(Long authorId);
+    Page<Article> findByCategoryIdOrderByIdDesc(Pageable pageable, Long categoryId);
+    Page<Article> findByAuthorIdOrderByIdDesc(Pageable pageable,Long authorId);
+    Page<Article> findAllByOrderByIdDesc(Pageable pageable);
+    List<Article> findTop20ByIsNoticeOrderByIdDesc(Byte isNotice);
     List<Article> findByIsNotice(Byte isNotice);
-
-    Page<Article> findAllByOrderByCreatedAtDesc(Pageable pageable);
-    List<Article> findTop20ByIsNoticeOrderByCreatedAtDesc(Byte isNotice);
+    long countByCategoryId(Long categoryId);
+    long countByAuthorId(Long authorId);
 }

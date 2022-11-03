@@ -47,14 +47,14 @@
                         <td>
                             <a href="#"
                                class="text-danger fw-bold"
-                               th:href="@{/{categoryId}/v/{articleId} (categoryId=${notice.category?.id},articleId=${notice.id})}"
+                               th:href="@{/{categoryId}/v/{articleId} (categoryId=${notice.categoryId},articleId=${notice.id})}"
                                th:text="${notice.title}">
                             </a>
                             <span class="text-info" th:text="|[${notice.commentCount}]|"></span>
                         </td>
                         <td>
-                            <a th:href="@{/members/{memberId}/ (memberId=${notice.author?.id})}"
-                               th:text="${notice.author?.username}"></a>
+                            <a th:href="@{/members/{memberId}/ (memberId=${notice.authorId})}"
+                               th:text="${notice.authorName}"></a>
                         </td>
                         <td th:text="${notice.createdAt}"></td>
                         <td th:text="${notice.viewCount}"></td>
@@ -65,18 +65,18 @@
                     <tr th:each="article : ${articles}">
                     <td>
                         <a class="fs-6"
-                           th:href="@{/{categoryId}/ (categoryId=${article.category?.id})}"
-                           th:text="${article.category?.name}"></a>
+                           th:href="@{/{categoryId}/ (categoryId=${article.categoryId})}"
+                           th:text="${article.categoryName}"></a>
                     </td>
                     <td>
                         <a href="#"
-                           th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.category?.id},articleId=${article.id})}"
+                           th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.categoryId},articleId=${article.id})}"
                            th:text="${article.title}"></a>
                         <span class="text-info" th:text="|[${article.commentCount}]|"></span>
                     </td>
                     <td>
-                        <a th:href="@{/members/{memberId}/ (memberId=${article.author?.id})}"
-                           th:text="${article.author?.username}"></a>
+                        <a th:href="@{/members/{memberId}/ (memberId=${article.authorId})}"
+                           th:text="${article.authorName}"></a>
                     </td>
                     <td th:text="${article.createdAt}"></td>
                     <td th:text="${article.viewCount}"></td>
@@ -91,92 +91,9 @@
     </div>
     <footer th:replace="fragments/footer :: footer" />
 </div>
-</body>
-<script th:inline="javascript">
-$(document).ready(function() {
-    console.log([[${totalArticleCount}]]+"개의 글");
-    var currentPage;
-    if([[${param.page}]] == null) {
-        currentPage = 1;
-    } else {
-        currentPage = [[${param.page}]];
-    }
-    renderPagination(currentPage);
-});
-
-function renderPagination(currentPage) {
-    var _totalCount = [[${totalArticleCount}]];
-    var _size = 20;
-    if([[${param.size}]] != null) {
-        _size = [[${param.size}]];
-    }
-
-    if (_totalCount <= _size) return;
-
-    var totalPage = Math.ceil(_totalCount / _size);
-    var pageGroup = Math.ceil(currentPage / 10);
-
-    var last = pageGroup * 10;
-    if (last > totalPage) last = totalPage;
-    var first = last - (10 - 1) <= 0 ? 0 : last - (10 - 1);
-    var next = last + 1;
-    var prev = first - 1;
-
-    const fragmentPage = document.createDocumentFragment();
-    if (prev > 0) {
-        var allpreli = document.createElement('li');
-        allpreli.classList.add('page-item');
-        allpreli.insertAdjacentHTML("beforeend", `<a href="/articles?page=${1}&size=${_size}" id='allprev' class='page-link'>&lt;&lt;</a>`);
-
-        var preli = document.createElement('li');
-        preli.classList.add('page-item');
-        preli.insertAdjacentHTML("beforeend", `<a href="/articles?page=${prev}&size=${_size}" id='prev' class='page-link'>&lt;</a>`);
-
-        fragmentPage.appendChild(allpreli);
-        fragmentPage.appendChild(preli);
-    }
-
-    for (var i = first; i <= last; i++) {
-        const li = document.createElement("li");
-        li.classList.add('page-item');
-        li.insertAdjacentHTML("beforeend", `<a href="/articles?page=${i}&size=${_size}" id='page-${i}' data-num='${i}' class='page-link'>${i}</a>`);
-        fragmentPage.appendChild(li);
-    }
-
-    if (last < totalPage) {
-        var allendli = document.createElement('li');
-        allendli.classList.add('page-item');
-        allendli.insertAdjacentHTML("beforeend", `<a href="/articles?page=${totalPage}&size=${_size}" id='allnext' class='page-link'>&gt;&gt;</a>`);
-
-        var endli = document.createElement('li');
-        endli.classList.add('page-item');
-        endli.insertAdjacentHTML("beforeend", `<a href="/articles?page=${next}&size=${_size}" id='next' class='page-link'>&gt;</a>`);
-
-        fragmentPage.appendChild(endli);
-        fragmentPage.appendChild(allendli);
-    }
-
-    document.getElementById('js-pagination').appendChild(fragmentPage);
-    // 페이지 목록 생성
-
-    $(`#js-pagination a`).removeClass("active");
-    $(`#js-pagination a#page-${currentPage}`).addClass("active");
-
-};
-
-function toggleCheckbox(element) {
-    console.log(element.checked);
-    if (element.checked) {
-        document.getElementById("noticeArticles").style.display = "none";
-    } else {
-        document.getElementById("noticeArticles").style.display = "table-row-group";
-    }
-}
-
-function selectSize() {
-    var size = document.getElementById('size');
-    if(size.value) location.href=('/articles?page=1&size=' + size.value);
-}
-
+<script>
+    const _totalCount = [[${totalArticleCount}]];
 </script>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/pagination.js}"></script>
+</body>
 </html>

@@ -5,6 +5,8 @@ import com.leeminjung1.domain.model.article.ArticleLike;
 import com.leeminjung1.infrastructure.repository.ArticleLikeRepository;
 import com.leeminjung1.infrastructure.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +33,12 @@ public class ArticleLikeService {
         return articleLikeRepository.findAllByArticleId(articleId);
     }
 
-    public List<Article> findArticleByMemberId(Long memberId) {
-        return articleLikeRepository.findArticleByMemberId(memberId);
+    public Page<Article> findArticleByMemberId(Pageable pageable, Long memberId) {
+        return articleLikeRepository.findArticleByMemberId(pageable, memberId);
+    }
+
+    public long countArticleLikeByMemberId(Long memberId) {
+        return articleLikeRepository.countByMemberId(memberId);
     }
 
 }

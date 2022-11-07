@@ -2,6 +2,8 @@ package com.leeminjung1.infrastructure.repository;
 
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.article.ArticleLike;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +22,7 @@ public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> 
     List<ArticleLike> findAllByArticleId(Long articleId);
 
     @Query(value = "SELECT a FROM Article a JOIN ArticleLike al ON a.id=al.article.id WHERE al.member.id=:memberId")
-    List<Article> findArticleByMemberId(Long memberId);
+    Page<Article> findArticleByMemberId(Pageable pageable, Long memberId);
+
+    long countByMemberId(Long memberId);
 }

@@ -1,18 +1,15 @@
 package com.leeminjung1.domain.application.impl;
 
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
-import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.infrastructure.repository.ArticleLikeRepository;
 import com.leeminjung1.infrastructure.repository.ArticleRepository;
 import com.leeminjung1.infrastructure.repository.CategoryRepository;
 import com.leeminjung1.infrastructure.repository.CommentRepository;
-import com.leeminjung1.infrastructure.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +41,10 @@ public class ArticleService {
         return articleRepository.countByAuthorId(authorId);
     }
 
+    public long countArticlesByCommentWriterId(Long writerId) {
+        return articleRepository.countArticleCommentedByWriterId(writerId);
+    }
+
     public Optional<Article> findArticleById(long articleId) {
         Optional<Article> article = articleRepository.findById(articleId);
         return article;
@@ -59,22 +60,14 @@ public class ArticleService {
         return articles.map(ArticleListDto::new);
     }
 
-    public List<ArticleListDto> findArticlesThatCommentedByMemberId(Long memberId) {
-        List<Article> articles = commentRepository.findAllArticleByWriterId(memberId);
-        List<ArticleListDto> list = new ArrayList<>();
-        for (Article article : articles) {
-            list.add(new ArticleListDto(article));
-        }
-        return list;
+    public Page<ArticleListDto> findArticlesThatCommentedByMemberId(Pageable pageable, Long memberId) {
+        Page<Article> articles = commentRepository.findArticlesByWriterIdOrderByIdDesc(pageable, memberId);
+        return articles.map(ArticleListDto::new);
     }
 
-    public List<ArticleListDto> findArticlesThatLikedByMemberId(Long memberId) {
-        List<Article> articles = likeRepository.findArticleByMemberId(memberId);
-        List<ArticleListDto> list = new ArrayList<>();
-        for (Article article : articles) {
-            list.add(new ArticleListDto(article));
-        }
-        return list;
+    public Page<ArticleListDto> findArticlesThatLikedByMemberId(Pageable pageable, Long memberId) {
+        Page<Article> articles = likeRepository.findArticleByMemberId(pageable, memberId);
+        return articles.map(ArticleListDto::new);
     }
 
     public Category findCategoryByCategoryId(Long categoryId) {

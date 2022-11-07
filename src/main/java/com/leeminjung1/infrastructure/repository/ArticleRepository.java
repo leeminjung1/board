@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,4 +21,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long>{
     List<Article> findByIsNotice(Byte isNotice);
     long countByCategoryId(Long categoryId);
     long countByAuthorId(Long authorId);
+
+    @Query(value = "select count(distinct a.id) from Article a join Comment c on a.id=c.article.id where c.writer.id=:writerId order by a.id desc")
+    long countArticleCommentedByWriterId(Long writerId);
 }

@@ -48,7 +48,7 @@ public class Comment {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
     private List<Comment> children = new ArrayList<>();
 
     private LocalDateTime createdAt;
@@ -62,7 +62,7 @@ public class Comment {
         this.article = article;
         this.content = content;
         this.file = file;
-        this.parent = Objects.requireNonNullElse(parent, this);
+        this.parent = parent;
         this.voteCount = voteCount;
         this.createdAt = LocalDateTime.now();
     }

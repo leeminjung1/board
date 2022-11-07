@@ -11,6 +11,11 @@ if (_size == null) {
     _size = 20;
 }
 
+let _tab = params.tab;
+if (_tab == null) {
+    _tab = "articles";
+}
+
 const href = window.location.href;
 const pathname = window.location.pathname;
 console.log(href);
@@ -37,11 +42,11 @@ function renderPagination(_currentPage) {
     if (prev > 0) {
         var allpreli = document.createElement('li');
         allpreli.classList.add('page-item');
-        allpreli.insertAdjacentHTML("beforeend", `<a href="${pathname}?page=${1}&size=${_size}" id='allprev' class='page-link'>&lt;&lt;</a>`);
+        allpreli.insertAdjacentHTML("beforeend", `<a href="${pathname}?tab=${_tab}&page=${1}&size=${_size}" id='allprev' class='page-link'>&lt;&lt;</a>`);
 
         var preli = document.createElement('li');
         preli.classList.add('page-item');
-        preli.insertAdjacentHTML("beforeend", `<a href="${pathname}?page=${prev}&size=${_size}" id='prev' class='page-link'>&lt;</a>`);
+        preli.insertAdjacentHTML("beforeend", `<a href="${pathname}?tab=${_tab}&page=${prev}&size=${_size}" id='prev' class='page-link'>&lt;</a>`);
 
         fragmentPage.appendChild(allpreli);
         fragmentPage.appendChild(preli);
@@ -50,18 +55,18 @@ function renderPagination(_currentPage) {
     for (var i = first; i <= last; i++) {
         const li = document.createElement("li");
         li.classList.add('page-item');
-        li.insertAdjacentHTML("beforeend", `<a href="${pathname}?page=${i}&size=${_size}" id='page-${i}' data-num='${i}' class='page-link'>${i}</a>`);
+        li.insertAdjacentHTML("beforeend", `<a href="${pathname}?tab=${_tab}&page=${i}&size=${_size}" id='page-${i}' data-num='${i}' class='page-link'>${i}</a>`);
         fragmentPage.appendChild(li);
     }
 
     if (last < totalPage) {
         var allendli = document.createElement('li');
         allendli.classList.add('page-item');
-        allendli.insertAdjacentHTML("beforeend", `<a href="${pathname}?page=${totalPage}&size=${_size}" id='allnext' class='page-link'>&gt;&gt;</a>`);
+        allendli.insertAdjacentHTML("beforeend", `<a href="${pathname}?tab=${_tab}&page=${totalPage}&size=${_size}" id='allnext' class='page-link'>&gt;&gt;</a>`);
 
         var endli = document.createElement('li');
         endli.classList.add('page-item');
-        endli.insertAdjacentHTML("beforeend", `<a href="${pathname}?page=${next}&size=${_size}" id='next' class='page-link'>&gt;</a>`);
+        endli.insertAdjacentHTML("beforeend", `<a href="${pathname}?tab=${_tab}&page=${next}&size=${_size}" id='next' class='page-link'>&gt;</a>`);
 
         fragmentPage.appendChild(endli);
         fragmentPage.appendChild(allendli);

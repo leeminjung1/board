@@ -85,13 +85,15 @@ public class MemberController {
             model.addAttribute("articles", articleService.findArticlesByAuthorId(pageable, memberId));
             model.addAttribute("totalArticleCount", articleService.countAllByAuthorId(memberId));
         } else if (tab.equals("commentedArticles")) {
-            model.addAttribute("articles", articleService.findArticlesThatCommentedByMemberId(memberId));
-            model.addAttribute("totalArticleCount", commentService.countAllByWriterId(memberId));
+            model.addAttribute("articles", articleService.findArticlesThatCommentedByMemberId(pageable, memberId));
+            model.addAttribute("totalArticleCount", articleService.countArticlesByCommentWriterId(memberId));
 
         } else if (tab.equals("likedArticles")) {
-            model.addAttribute("articles", articleService.findArticlesThatLikedByMemberId(memberId));
+            model.addAttribute("articles", articleService.findArticlesThatLikedByMemberId(pageable, memberId));
+            model.addAttribute("totalArticleCount", likeService.countArticleLikeByMemberId(memberId));
         } else if (tab.equals("comments")) {
-            model.addAttribute("comments", commentService.findAllCommentByMemberId(memberId));
+            model.addAttribute("comments", commentService.findAllCommentByMemberId(pageable, memberId));
+            model.addAttribute("totalArticleCount", commentService.countByWriterId(memberId));
         }
 
         return "users/userActivity";

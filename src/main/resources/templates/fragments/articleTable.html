@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <table th:fragment="articleTable" class="table table-hover rounded-top">
-    <div th:if="${#lists.isEmpty(articles)}"
+    <div th:if="${totalArticleCount==0}"
          class="bg-light p-4 text-center">
         게시글이 없습니다.
     </div>
-    <thead th:unless="${#lists.isEmpty(articles)}" class="table-light text-center">
+    <thead th:unless="${totalArticleCount==0}" class="table-light text-center">
     <tr>
         <th colspan="2">제목</th>
         <th>작성자</th>

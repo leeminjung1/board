@@ -18,8 +18,6 @@ if (_tab == null) {
 
 const href = window.location.href;
 const pathname = window.location.pathname;
-console.log(href);
-console.log(pathname);
 
 $(document).ready(function() {
     console.log( _totalCount + "개의 글");

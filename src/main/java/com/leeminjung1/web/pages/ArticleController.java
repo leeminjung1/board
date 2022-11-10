@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -211,6 +209,20 @@ public class ArticleController {
     }
 
     /**
+     * 유저활동에서 선택된 게시글 삭제
+     */
+    @PostMapping("api/delete/selectedArticles")
+    public ResponseEntity<?> deleteSelectedArticles(HttpServletRequest request) {
+        String[] selectedValues = request.getParameterValues("selectedValues");
+        List<Long> ids = new ArrayList<>();
+        for (String selectedValue : selectedValues) {
+            ids.add(Long.parseLong(selectedValue));
+        }
+        articleService.deleteByIdIn(ids);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
      * 좋아요
      */
     @PostMapping("/api/like/article/{articleId}")
@@ -237,6 +249,17 @@ public class ArticleController {
     public ResponseEntity<?> deleteComment(HttpServletRequest request) {
         Long commentId = Long.valueOf(request.getParameter("commentId"));
         commentService.deleteComment(commentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 댓글 수정
+     */
+    @PostMapping("api/update/comment")
+    public ResponseEntity<?> updateComment(HttpServletRequest request) {
+        Long commentId = Long.valueOf(request.getParameter("commentId"));
+        String content = request.getParameter("content");
+        commentService.updateComment(commentId, content);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

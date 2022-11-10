@@ -63,7 +63,19 @@ color: black;
                 </div>
                 <div th:if="${#request.getParameter('tab')} == null or ${#request.getParameter('tab')}=='articles'"
                      class="mt-2 mb-5 pb-5 border-bottom">
-                    <table th:replace="fragments/articleTableNoAuthor :: articleTableNoAuthor"/>
+                        <table th:replace="fragments/articleTableMy :: articleTableNoAuthor"/>
+                    <div th:if="${member.username == #authentication.name}" class="mt-2 mb-4 overflow-auto">
+                        <div class="float-start">
+                            <div>
+                                <input type="checkbox" name="check_all" id="check_all">
+                                <label for="check_all">전체선택</label>
+                            </div>
+                        </div>
+                        <div class="float-end">
+                            <button class="btnDelete btn btn-light">삭제</button>
+                            <button class="btn btn-light ms-1">글쓰기</button>
+                        </div>
+                    </div>
                     <div>
                         <nav th:replace="fragments/pagination::pagination"></nav>
                     </div>
@@ -88,7 +100,32 @@ color: black;
     <div th:replace="fragments/footer :: footer" />
 </div>
 <script>
-    const _totalCount = [[${totalArticleCount}]];
+const _totalCount = [[${totalArticleCount}]];
+
+// 전체선택/해제
+$('input[name=check_all]').on('change', function(){
+    $('input[name=_selected_]').prop('checked', this.checked);
+});
+
+$('.btnDelete').on("click", function () {
+    var arr = $('input[name=_selected_]:checked').serializeArray().map(function(item) { return item.value });
+    var str = $('input[name=_selected_]:checked').serialize(); // 이건 QueryString 방식으로
+    console.log(arr);
+
+    $.ajax({
+        type: "post",
+        url: "/api/delete/selectedArticles",
+        data: {selectedValues: arr},
+        traditional: true
+    }).done(res=>{
+        console.log("성공");
+        window.location.reload();
+    }).fail(error=>{
+        console.log("오류", error);
+    });
+
+});
+
 </script>
 <script th:inline="javascript" type="text/javascript" th:src="@{/js/pagination.js}"></script>
 </body>

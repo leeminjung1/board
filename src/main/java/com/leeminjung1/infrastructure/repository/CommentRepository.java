@@ -31,4 +31,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
     @Query(value = "UPDATE Comment c SET c.content=null, c.createdAt=null, voteCount=null, c.file.id=null, c.writer.id=null WHERE c.id = :commentId")
     void deleteCommentWhereChildrenExist(Long commentId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE Comment c SET c.content=:content WHERE c.id = :commentId")
+    void updateComment(Long commentId, String content);
 }

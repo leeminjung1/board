@@ -70,4 +70,8 @@ public class CommentService {
             commentRepository.deleteById(commentId);
         }
     }
+
+    public void updateComment(Long commentId, String content) {
+        commentRepository.updateComment(commentId, content);
+    }
 }

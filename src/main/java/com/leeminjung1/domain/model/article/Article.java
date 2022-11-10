@@ -29,7 +29,7 @@ public class Article {
     @Column(columnDefinition = "LONGTEXT")
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -37,7 +37,7 @@ public class Article {
     @JoinColumn(name = "author_id")
     private Member author;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "article", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     private LocalDateTime createdAt;
@@ -47,11 +47,11 @@ public class Article {
     @Formula("(select count(*) from comment c where c.article_id = id)")
     private Long commentCount;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<ArticleLike> likes;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<File> files = new ArrayList<>();
 
     private Byte isNotice;

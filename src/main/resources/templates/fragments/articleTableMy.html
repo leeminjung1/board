@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <table th:fragment="articleTableNoAuthor" class="table table-hover rounded-top">
-    <div th:if="${#lists.isEmpty(articles)}"
+    <div th:if="${totalArticleCount==0}"
          class="bg-light p-4 text-center">
-        게시글이 없습니다.
+        작성한 게시글이 없습니다.
     </div>
-    <thead th:unless="${#lists.isEmpty(articles)}" class="table-light text-center">
+    <thead th:unless="${totalArticleCount==0}" class="table-light text-center">
     <tr>
-        <th colspan="2">제목</th>
+        <th colspan="3">제목</th>
         <th>작성일</th>
         <th>조회</th>
         <th>좋아요</th>
@@ -15,6 +15,7 @@
     </thead>
     <tbody>
     <tr th:each="article : ${articles}">
+        <td th:if="${member.username == #authentication.name}"><input type="checkbox" name="_selected_" th:value="${article.id}"></td>
         <td class="text-center" th:text="${article.id}"></td>
         <td>
             <a href="#"

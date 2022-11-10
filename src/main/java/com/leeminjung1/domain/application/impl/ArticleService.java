@@ -117,4 +117,8 @@ public class ArticleService {
     public List<Article> findNoticeArticles() {
         return articleRepository.findByIsNotice((byte) 1);
     }
+
+    public void deleteByIdIn(List<Long> ids) {
+        articleRepository.deleteByIdIn(ids);
+    }
 }

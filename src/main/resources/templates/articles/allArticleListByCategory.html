@@ -8,81 +8,15 @@
         <div class="mb-2 p-4 bg-primary bg-opacity-10 rounded text-center">
             <h3 th:text="${category.name}"></h3>
         </div>
-        <div class="mb-2 d-block overflow-auto">
-            <div class="float-start">
-                <span th:text="${#numbers.formatInteger(totalArticleCount, 0, 'COMMA')}" class="fw-semibold"></span>
-                <span>개의 글</span>
-            </div>
-            <div class="float-end">
-                <div class="d-inline-block">
-                    <input type="checkbox" id="hideNotice" onclick="toggleCheckbox(this)">
-                    <label for="hideNotice">공지 숨기기</label>
-                </div>
-                <div class="ms-3 ps-3 border-start d-inline-block">
-                    <select id="size" class="form-control" onchange="selectSize()">
-                        <option value="" selected="selected" hidden="hidden" th:text="|${param.size==null?20:param.size}개씩|"></option>
-                        <option value="10" >10개씩</option>
-                        <option value="20">20개씩</option>
-                        <option value="30">30개씩</option>
-                        <option value="50">50개씩</option>
-                    </select>
-                </div>
-            </div>
-        </div>
+        <div th:replace="fragments/listStyle :: listStyle" />
         <div>
             <button type="button" th:onclick="|location.href='@{/{categoryId}/new(categoryId=${categoryId})}'|" class="btn btn-primary">글쓰기</button>
         </div>
         <div id="article_list_area">
             <table class="table table-hover">
-                <thead class="table-light">
-                <tr>
-                    <th></th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
-                    <th>조회</th>
-                    <th>좋아요</th>
-                </tr>
-                </thead>
-                <tobdy id="noticeArticles">
-                <tr th:each="notice : ${notices}" class="bg-light">
-                    <td class="text-danger fw-bold">공지</td>
-                    <td>
-                        <a href="#"
-                           class="text-danger fw-bold"
-                           th:href="@{/{categoryId}/v/{articleId} (categoryId=${notice.categoryId},articleId=${notice.id})}"
-                           th:text="${notice.title}">
-                        </a>
-                        <span class="text-info" th:text="|[${notice.commentCount}]|"></span>
-                    </td>
-                    <td>
-                        <a th:href="@{/members/{memberId}/ (memberId=${notice.authorId})}"
-                           th:text="${notice.authorName}"></a>
-                    </td>
-                    <td th:text="${notice.createdAt}"></td>
-                    <td th:text="${notice.viewCount}"></td>
-                    <td th:text="${notice.likeCount}"></td>
-                </tr>
-                </tobdy>
-                <tbody>
-                <tr th:each="article : ${articles}">
-                    <td th:text="${article.id}"></td>
-                    <td>
-                        <a href="#"
-                           th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.categoryId},articleId=${article.id})}"
-                           th:text="${article.title}">
-                        </a>
-                        <span class="text-info" th:text="|[${article.commentCount}]|"></span>
-                    </td>
-                    <td>
-                        <a th:href="@{/members/{memberId}/ (memberId=${article.authorId})}"
-                           th:text="${article.authorName}"></a>
-                    </td>
-                    <td th:text="${article.createdAt}"></td>
-                    <td th:text="${article.viewCount}"></td>
-                    <td th:text="${article.likeCount}"></td>
-                </tr>
-                </tbody>
+                <thead th:replace="fragments/articleTable :: thead"/>
+                <tbody th:replace="fragments/articleTable :: tbody(${notices}, 'notice')"/>
+                <tbody th:replace="fragments/articleTable :: tbody(${articles}, 'article_id')"/>
             </table>
         </div>
         <div>
@@ -95,5 +29,6 @@
     const _totalCount = [[${totalArticleCount}]];
 </script>
 <script th:inline="javascript" type="text/javascript" th:src="@{/js/pagination.js}"></script>
+<script type="text/javascript" th:src="@{/js/hideNotice.js}"></script>
 </body>
 </html>

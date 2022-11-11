@@ -82,7 +82,7 @@ color: black;
                 </div>
                 <div th:if="${#request.getParameter('tab')} != null and (${#request.getParameter('tab')}=='likedArticles' or ${#request.getParameter('tab')}=='commentedArticles')"
                      class="mt-2 mb-5 pb-5 border-bottom">
-                    <table th:replace="fragments/articleTable :: articleTable"/>
+                    <table th:replace="fragments/articleTable :: articleTable(${articles}, 'article_id')"/>
                     <div>
                         <nav th:replace="fragments/pagination::pagination"></nav>
                     </div>

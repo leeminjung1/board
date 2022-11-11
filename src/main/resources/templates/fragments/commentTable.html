@@ -14,9 +14,16 @@
     <tr th:each="comment : ${comments}">
         <td class="">
             <a th:href="@{/{categoryId}/v/{articleId} (categoryId=${comment.categoryId},articleId=${comment.articleId})}">
-                <div th:text="${comment.content}"></div>
+                <div th:text="${comment.content}">
+                    <span th:if="${#strings.contains(comment.createdAt, '전')}"
+                          style="background-image: url('/images/ico-new-article.svg'); transform-origin: center center 1px; width:12px; height: 12px; background-repeat:no-repeat;"
+                          class="d-inline-block"></span>
+                </div>
                 <div class="text-secondary fw-light" th:text="${comment.createdAt}"></div>
-                <div class="text-secondary fw-light mt-2" th:text="${comment.title}"></div>
+                <div class="text-secondary fw-light mt-2">
+                    [[${comment.title}]]
+                    <span th:text="|[${comment.commentCount}]|" style="color: #ff2f3b"></span>
+                </div>
             </a>
         </td>
     </tr>

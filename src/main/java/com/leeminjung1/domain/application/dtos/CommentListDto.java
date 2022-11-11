@@ -14,6 +14,7 @@ public class CommentListDto {
     private String content;
     private String title;
     private String createdAt;
+    private Long commentCount;
 
     public CommentListDto(Comment comment) {
         this.articleId = comment.getArticle().getId();
@@ -21,5 +22,6 @@ public class CommentListDto {
         this.content = comment.getContent();
         this.title = comment.getArticle().getTitle();
         this.createdAt = DateUtil.getDateTimeToString(comment.getArticle().getCreatedAt());
+        this.commentCount = comment.getArticle().getCommentCount();
     }
 }

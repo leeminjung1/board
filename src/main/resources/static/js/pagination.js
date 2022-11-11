@@ -20,7 +20,6 @@ const href = window.location.href;
 const pathname = window.location.pathname;
 
 $(document).ready(function() {
-    console.log( _totalCount + "개의 글");
     renderPagination(_currentPage);
 });
 
@@ -77,14 +76,6 @@ function renderPagination(_currentPage) {
     $(`#js-pagination a#page-${_currentPage}`).addClass("active");
 
 };
-
-    function toggleCheckbox(element) {
-    if (element.checked) {
-        document.getElementById("noticeArticles").style.display = "none";
-    } else {
-        document.getElementById("noticeArticles").style.display = "table-row-group";
-    }
-}
 
 function selectSize() {
     var size = document.getElementById('size');

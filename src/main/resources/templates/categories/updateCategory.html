@@ -8,125 +8,36 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div class="container">
         <form th:action="@{/manage/category}" method="post" th:object="${inputs}">
-            <div class="my-3 p-2 bg-light">
+            <div class="my-3 p-2 bg-light rounded">
                 <div id="categoryList" class="wrap">
                     <div th:if="${category.depth == 1}"
-                         th:each="category : ${categoryDto.categories}">
-                        <div class="px-3 py-2 border bg-white">
-                            <a class="fw-bold"
-                               th:href="@{/{categoryId}/ (categoryId=${category.id})}"
-                               th:text="|${category.name}|">
-                            </a>
+                         th:each="category : ${categoryDto.categories}"
+                         th:id="${category.name}">
+                        <div class="px-3 py-2 border bg-white fw-bold"
+                             th:text="|${category.name}|">
                         </div>
                         <div>
                             <div th:if="${child.depth ==2}"
                                  th:each="child : ${category.children}"
                                  class="ms-5">
-                                <div class="px-3 py-2 border bg-white">
-                                    <a th:href="@{/{categoryId}/ (categoryId=${child.id})}"
-                                       th:text="|${child.name}|">
-                                    </a>
+                                <div class="px-3 py-2 border bg-white"
+                                     th:text="|${child.name}|">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="px-3 py-2 border">
-                    <button class="add_category_button" type="button">+ 카테고리 추가</button>
+                    <button class="add_category_button btn btn-outline-secondary" type="button">+ 카테고리 추가</button>
                 </div>
             </div>
             <div>
-                <button type="submit">변경사항 저장</button>
+                <button class="btn" type="submit">변경사항 저장</button>
             </div>
         </form>
     </div>
     <div th:replace="fragments/footer :: footer" />
-    <script type="text/javascript" th:inline="javascript">
-$(function() {
-    $('#categoryList').sortable({
-        update: function(event, ui) {
-            var result = $(this).sortable('toArray', {attribute: 'id'});
-            console.log(result);
-        },
-    });
-});
-
-$(document).ready(function() {
-    var add_button = $(".add_category_button");
-    var wrapper = $(".wrap");
-    $(add_button).click(function(e){
-        e.preventDefault();
-        console.log("add category on click");
-        $(wrapper).append('<div><div class="px-3 py-2 border bg-white"><form><input type="text" name="name" class="form-control"><div class="input-group-append"><button class="btn remove_field" type="reset">취소</button></div><div class="input-group-append"><button class="btn addCategoryBtn" type="button">확인</button></div></form></div></div>');
-    });
-
-    $(wrapper).on("click",".remove_field", function(e){
-        e.preventDefault();
-        $(this).parent('div').parent('form').parent('div').parent('div').remove();
-    });
-
-    $(wrapper).on("click",".addCategoryBtn", function(e){
-        e.preventDefault();
-        var name = $('form input[name=name]').val();
-        addNewCategory(name);
-    });
-});
-
-
-    function addNewCategory(name){
-    var dataArray = [];
-    var data1 = {
-        "name" : name,
-        "age"  : "21"
-    }
-    var data2 = {
-       "name" : name,
-       "age"  : "22"
-    }
-    dataArray.push(data1);
-    dataArray.push(data2);
-    var paramList = {
-       "paramList" : JSON.stringify(dataArray)
-    }
-    $.ajax({
-         type : "POST",
-         url : "/memberInfo.do",
-         data : paramList,
-         success : function(data) {},
-         error : function(e) {}
-      });
-    };
-
-
-function onclickAddCategory(){
-<!--    var name = document.getElementById('newCategoryName').value;-->
-    var name = event.target.value
-    let categoryList = [[${categoryDto.categories}]];
-    let newCategory = {
-        id: idx--,
-        name: name,
-        depth: 1,
-        priority: 0,
-        parent: [[${categoryDto.categories[0]}]],
-    };
-    categoryList.push(newCategory);
-    console.log(categoryList);
-};
-
-function editName(){
-    document.getElementById("info_btn").style.display = "none";
-    document.getElementById("category_item").style.display = "none";
-    document.getElementById("edit_btn").style.display = "block";
-    return false;
-}
-
-function cancelEditName(){
-    document.getElementById("info_btn").style.display = "block";
-    document.getElementById("category_item").style.display = "block";
-    document.getElementById("edit_btn").style.display = "none";
-}
-
-</script>
 </div>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/updateCategory.js}"></script>
 </body>
 </html>

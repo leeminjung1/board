@@ -3,25 +3,59 @@
 <head th:replace="fragments/header :: header">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
+<style>
+.info_btn{
+    display: none;
+}
+
+.bundle_item:hover .info_btn{
+    display: block;
+}
+</style>
 <body>
 <div>
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div class="container">
-        <form th:action="@{/manage/category}" method="post" th:object="${inputs}">
+        <form th:action="@{/manage/category}" method="post" th:object="${requestDtos}">
             <div class="my-3 p-2 bg-light rounded">
                 <div id="categoryList" class="wrap">
                     <div th:if="${category.depth == 1}"
                          th:each="category : ${categoryDto.categories}"
-                         th:id="${category.name}">
-                        <div class="px-3 py-2 border bg-white fw-bold"
-                             th:text="|${category.name}|">
+                         th:id="${category.id}">
+                        <div class="bundle_item px-3 py-2 border bg-white overflow-auto d-flex align-items-center justify-content-between" style="height:50px;">
+                            <div class="fw-bold" th:text="|${category.name}|"></div>
+                            <div class="info_btn">
+                                <a class="btn btn-outline-secondary"
+                                   style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                   href="javascript:;"
+                                   th:onclick="updateCategory([[${category.id}]])">수정</a>
+                                <a class="btn btn-outline-secondary"
+                                   style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                   href="javascript:;"
+                                   th:onclick="deleteCategory([[${category.id}]])"
+                                   th:classappend="${#lists.size(category.children)!=0 || #lists.size(category.articles)!=0} ? disabled"
+                                   th:attr="aria-disabled=${#lists.size(category.children)!=0 || #lists.size(category.articles)!=0 ? true: false}">삭제</a>
+                            </div>
                         </div>
                         <div>
-                            <div th:if="${child.depth ==2}"
-                                 th:each="child : ${category.children}"
+                            <div th:each="child : ${category.children}"
+                                 th:if="${child.depth == 2}"
+                                 th:id="${child.id}"
                                  class="ms-5">
-                                <div class="px-3 py-2 border bg-white"
-                                     th:text="|${child.name}|">
+                                <div class="bundle_item px-3 py-2 border bg-white overflow-auto d-flex align-items-center justify-content-between" style="height:50px;">
+                                    <div th:text="|${child.name}|"></div>
+                                    <div class="info_btn">
+                                        <a class="btn btn-outline-secondary"
+                                           style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                           href="javascript:;"
+                                           th:onclick="updateCategory([[${child.id}]])">수정</a>
+                                        <a class="btn btn-outline-secondary"
+                                           style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                           href="javascript:;"
+                                           th:onclick="deleteCategory([[${child.id}]])"
+                                           th:classappend="${#lists.size(child.children)!=0 || #lists.size(child.articles)!=0} ? disabled"
+                                           th:attr="aria-disabled=${#lists.size(child.children)!=0 || #lists.size(child.articles)!=0 ? true: false}">삭제</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -32,7 +66,7 @@
                 </div>
             </div>
             <div>
-                <button class="btn" type="submit">변경사항 저장</button>
+                <button class="btn submitUpdateCategory" type="button">변경사항 저장</button>
             </div>
         </form>
     </div>

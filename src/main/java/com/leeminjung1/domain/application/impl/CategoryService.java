@@ -25,6 +25,10 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
+    public Category findByCategoryId(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("no Category found"));
+    }
+
     public Category findByCategoryName(String name) {
         Category category = categoryRepository.findByName(name);
         return category;
@@ -56,5 +60,13 @@ public class CategoryService {
 
     public void updateCategory(Category category) {
         categoryRepository.save(category);
+    }
+
+    public void addCategoryByList(List<Category> categories) {
+        categoryRepository.saveAll(categories);
+    }
+
+    public void deleteAllById(List<Long> ids) {
+        categoryRepository.deleteAllById(ids);
     }
 }

@@ -55,14 +55,14 @@ public class CategoryService {
 
 
     public CategoryDto getCategoryDto() {
-        return new CategoryDto(categoryRepository.findAll());
+        return new CategoryDto(categoryRepository.findAllByOrderByParentIdAscPriorityAsc());
     }
 
     public void updateCategory(Category category) {
         categoryRepository.save(category);
     }
 
-    public void addCategoryByList(List<Category> categories) {
+    public void saveCategories(List<Category> categories) {
         categoryRepository.saveAll(categories);
     }
 

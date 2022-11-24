@@ -32,6 +32,16 @@ $(document).ready(function() {
             "update": updateArr
         }
 
+        for(let i = 0; i < result.length; i++){
+//                updateArr[i].priority = result.indexOf(i);
+            categories.find(element => element.id == Number(result[i])).priority = i;
+//                categories[Number(result[i])].priority = i;
+        }
+        for(let i = 0; i < categories.length; i++) {
+            updateArr.push(categories[i]);
+            console.log(categories[i]);
+        }
+
         $.ajax({
              type : "POST",
              url : "/manage/category",
@@ -39,7 +49,7 @@ $(document).ready(function() {
              data : JSON.stringify(paramList)
         }).done(res=>{
             console.log("성공");
-            window.location.reload();
+//            window.location.reload();
         }).fail(error=>{
             console.log("오류", error);
         });
@@ -55,12 +65,7 @@ $(function() {
     $('#categoryList').sortable({
         update: function(event, ui) {
             result = $(this).sortable('toArray');
-
             console.log(result);
-            for(let i = 0; i < result.length; i++){
-                updateArr[i].priority = result.indexOf(i);
-            }
-
         },
     });
 });
@@ -69,26 +74,42 @@ function addNewCategory(name){
     var category = {
         "id" : idx,
         "name"  : name,
-        "priority" : result.indexOf(idx.toString()),
+        "priority" : Math.max(...categories.map(o => o.priority)) + 1,
         "parentId" : 1,
     }
     appendArr.push(category);
+    categories.push(category);
 }
 
-function editName(){
-    document.getElementById("info_btn").style.display = "none";
-    document.getElementById("category_item").style.display = "none";
-    document.getElementById("edit_btn").style.display = "block";
-    return false;
+function editName(id){
+    var category = categories.find(element => element.id == Number(id));
+    $('#'+ id).children().children().hide();
+    $('#'+ id).children().append('<input type="text" name="categoryName" placeholder=' + category.name + '></input>');
+    $('#'+ id).children().append('<a class="btn" href="javascript:;" onclick="cancelEditName(' + id + ')">취소</a>');
+    $('#'+ id).children().append('<a class="btn" href="javascript:;" onclick="submitEditName(' + id + ')">확인</a>');
 }
 
-function cancelEditName(){
-    document.getElementById("info_btn").style.display = "block";
-    document.getElementById("category_item").style.display = "block";
-    document.getElementById("edit_btn").style.display = "none";
+function cancelEditName(id){
+    $('#'+ id).children().children('input').remove();
+    $('#'+ id).children().children('a').remove();
+    $('#'+ id).children().children().removeAttr("style");
+}
+
+function submitEditName(id){
+    var name =  $('input[name=categoryName]').val();
+    categories.find(element => element.id == Number(id)).name = name;
+    console.log(categories.find(element => element.id == Number(id)));
+
+    $('#'+ id).children().children('input').remove();
+    $('#'+ id).children().children('a').remove();
+    $('#'+ id).children().children().removeAttr("style");
+    $('#'+ id).children().children('.fw-bold').text(name);
 }
 
 function deleteCategory(id) {
     deleteArr.push(id);
+//    const idx = categories.indexOf(element=>element.id = id);
+//    if (idx > -1) a.splice(idx, 1)
+    categories.splice(categories.indexOf(element=>element.id = id), 1);
     $('#'+ id ).hide();
 }

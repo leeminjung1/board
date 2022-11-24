@@ -1,8 +1,6 @@
 package com.leeminjung1.web.pages;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leeminjung1.domain.application.vo.CategoryVO;
 import com.leeminjung1.domain.application.dtos.CategoryRequestDto;
 import com.leeminjung1.domain.application.impl.CategoryService;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -45,9 +42,16 @@ public class CategoryController {
     public String updateCategory(@RequestBody CategoryRequestDto dto) throws JsonProcessingException {
         log.info(dto.toString());
 
-        List<CategoryVO> update = dto.getUpdate();
+        List<Category> update = dto.getUpdate();
         List<CategoryVO> append = dto.getAppend();
         List<Long> delete = dto.getDelete();
+
+        log.info(update.toString());
+        log.info(append.toString());
+        log.info(delete.toString());
+
+
+        categoryService.deleteAllById(delete);
 
         List<Category> categories = new ArrayList<>();
         for(CategoryVO vo: append) {
@@ -58,9 +62,13 @@ public class CategoryController {
                     .build();
             categories.add(category);
         }
-        categoryService.addCategoryByList(categories);
+        categoryService.saveCategories(categories);
 
-        categoryService.deleteAllById(delete);
+
+        for (Category category : update) {
+            category.setDepth(category.getParent().getDepth() == 0 ? 1 : 2);
+        }
+        categoryService.saveCategories(update);
 
         return "redirect:/manage/category";
     }

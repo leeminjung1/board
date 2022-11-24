@@ -28,7 +28,7 @@
                                 <a class="btn btn-outline-secondary"
                                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                                    href="javascript:;"
-                                   th:onclick="updateCategory([[${category.id}]])">수정</a>
+                                   th:onclick="editName([[${category.id}]])">수정</a>
                                 <a class="btn btn-outline-secondary"
                                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                                    href="javascript:;"
@@ -37,7 +37,7 @@
                                    th:attr="aria-disabled=${#lists.size(category.children)!=0 || #lists.size(category.articles)!=0 ? true: false}">삭제</a>
                             </div>
                         </div>
-                        <div>
+                        <div th:if="${#lists.size(category.children)!=0}">
                             <div th:each="child : ${category.children}"
                                  th:if="${child.depth == 2}"
                                  th:id="${child.id}"
@@ -48,7 +48,7 @@
                                         <a class="btn btn-outline-secondary"
                                            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                                            href="javascript:;"
-                                           th:onclick="updateCategory([[${child.id}]])">수정</a>
+                                           th:onclick="editName([[${child.id}]])">수정</a>
                                         <a class="btn btn-outline-secondary"
                                            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                                            href="javascript:;"
@@ -72,6 +72,12 @@
     </div>
     <div th:replace="fragments/footer :: footer" />
 </div>
+<script th:inline="javascript">
+/* <![CDATA[ */
+	var categories = /*[[${categoryDto.categories}]]*/;
+/* ]]> */
+
+</script>
 <script th:inline="javascript" type="text/javascript" th:src="@{/js/updateCategory.js}"></script>
 </body>
 </html>

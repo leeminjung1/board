@@ -14,7 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+//@ToString
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +43,8 @@ public class Category {
     private List<Article> articles = new ArrayList<>();
 
     @Builder
-    public Category(String name, Integer priority, Category parent) {
+    public Category(Long id, String name, Integer priority, Category parent) {
+        this.id = id;
         this.name = name;
         this.parent = parent;
         this.depth = (parent.depth == 0 ? 1 : 2);
@@ -57,5 +58,15 @@ public class Category {
         category.setDepth(0);
         category.setParent(null);
         return category;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", depth=" + depth +
+                ", priority=" + priority +
+                '}';
     }
 }

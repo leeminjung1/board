@@ -7,6 +7,7 @@ import com.leeminjung1.domain.application.impl.MemberServiceImpl;
 import com.leeminjung1.domain.model.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -27,9 +28,9 @@ public class CommentController {
     @PostMapping("/comment/add/{articleId}")
     public String addComment(@ModelAttribute CommentDto commentDto,
                              @PathVariable Long articleId,
-                             @AuthenticationPrincipal User user) {
+                             Authentication authentication) {
 
-        Member author = memberService.findByUsername(user.getUsername());
+        Member author = memberService.findByUsername(authentication.getName());
         commentService.addComment(author.getId(), articleId, commentDto);
         Long categoryId = categoryService.findCategoryIdByArticleId(articleId);
 

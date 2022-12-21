@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -75,7 +76,7 @@ public class ArticleController {
     @GetMapping("/{categoryId}/v/{articleId}")
     public String article(@PathVariable("categoryId") Long categoryId,
                           @PathVariable("articleId") Long articleId,
-                          @AuthenticationPrincipal User user,
+                          Authentication authentication,
                           HttpServletRequest request,
                           HttpServletResponse response,
                           Model model) {
@@ -87,7 +88,7 @@ public class ArticleController {
 
 
         int likeState = 0;
-        Member member = memberService.findByUsername(user.getUsername());
+        Member member = memberService.findByUsername(authentication.getName());
         Collection<ArticleLike> likes = member.getLikes();
         for (ArticleLike like : likes) {
             if (Objects.equals(like.getArticle().getId(), articleId)) {
@@ -198,9 +199,9 @@ public class ArticleController {
     @PostMapping("/{categoryId}/new")
     public String submitNewArticle(@ModelAttribute("article") ArticleRequestDto articleRequestDto,
                                    @PathVariable("categoryId") Long categoryId,
-                                   @AuthenticationPrincipal User user) {
+                                   Authentication authentication) {
 
-        articleRequestDto.setAuthor(memberService.findByUsername(user.getUsername()));
+        articleRequestDto.setAuthor(memberService.findByUsername(authentication.getName()));
         articleRequestDto.setCategory(articleService.findCategoryByCategoryId(categoryId));
         Article article = articleRequestDto.toEntity();
         articleService.save(article);
@@ -226,8 +227,8 @@ public class ArticleController {
      * 좋아요
      */
     @PostMapping("/api/like/article/{articleId}")
-    public ResponseEntity<?> likeIt(@PathVariable Long articleId, @AuthenticationPrincipal User user) {
-        likeService.likeArticle(articleId, memberService.getId(user.getUsername()));
+    public ResponseEntity<?> likeIt(@PathVariable Long articleId, Authentication authentication) {
+        likeService.likeArticle(articleId, memberService.getId(authentication.getName()));
         articleService.updateLikeCount(articleId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -236,8 +237,8 @@ public class ArticleController {
      * 좋아요 취소
      */
     @DeleteMapping("/api/like/article/{articleId}")
-    public ResponseEntity<?> unlikeIt(@PathVariable Long articleId, @AuthenticationPrincipal User user) {
-        likeService.unlikeArticle(articleId, memberService.getId(user.getUsername()));
+    public ResponseEntity<?> unlikeIt(@PathVariable Long articleId, Authentication authentication) {
+        likeService.unlikeArticle(articleId, memberService.getId(authentication.getName()));
         articleService.updateLikeCount(articleId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

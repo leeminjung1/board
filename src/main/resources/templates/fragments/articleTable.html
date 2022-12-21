@@ -31,7 +31,7 @@
                     <a th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.categoryId},articleId=${article.id})}"
                        class="me-2"
                        th:classappend="${showBeforeTitle} == 'notice' ? 'text-danger fw-semibold'">
-                        <span th:text="|[${article.categoryName}]|" class="text-secondary"></span>
+                        <span th:text="|[${article.categoryName}]|"></span>
                         [[${article.title}]]
                     </a>
                     <span th:if="${article.commentCount > 0}" th:text="|[${article.commentCount}]|" style="color: #ff2f3b"></span>

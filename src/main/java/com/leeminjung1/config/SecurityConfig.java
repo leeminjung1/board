@@ -35,6 +35,12 @@ public class SecurityConfig {
                 .anyRequest()
                 .authenticated()
                 .and()
+                .rememberMe() // rememberMe 기능 작동함
+                .rememberMeParameter("remember-me") // default: remember-me, checkbox 등의 이름과 맞춰야함
+                .tokenValiditySeconds(3600) // 쿠키의 만료시간 설정(초), default: 14일
+                .alwaysRemember(false) // 사용자가 체크박스를 활성화하지 않아도 항상 실행, default: false
+                .userDetailsService(userDetailsService)
+                .and()
                 .formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/")

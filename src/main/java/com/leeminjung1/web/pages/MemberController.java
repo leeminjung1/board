@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,8 +101,8 @@ public class MemberController {
     }
 
     @GetMapping("/members/me")
-    public String memberActivity(@AuthenticationPrincipal User user) {
-        return "redirect:/members/" + memberService.getId(user.getUsername());
+    public String memberActivity(Authentication authentication) {
+        return "redirect:/members/" + memberService.getId(authentication.getName());
     }
 
     /**

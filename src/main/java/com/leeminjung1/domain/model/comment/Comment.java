@@ -1,7 +1,6 @@
 package com.leeminjung1.domain.model.comment;
 
 import com.leeminjung1.domain.model.article.Article;
-import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.domain.model.file.File;
 import com.leeminjung1.domain.model.member.Member;
 import lombok.Builder;
@@ -13,7 +12,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table

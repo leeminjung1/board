@@ -2,11 +2,11 @@ package com.leeminjung1.web.pages;
 
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
 import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
-import com.leeminjung1.domain.application.dtos.CategoryDto;
+import com.leeminjung1.domain.application.dtos.CategoryListDto;
 import com.leeminjung1.domain.application.dtos.CommentDto;
-import com.leeminjung1.domain.application.impl.*;
+
+import com.leeminjung1.domain.application.service.impl.*;
 import com.leeminjung1.domain.model.article.Article;
-import com.leeminjung1.domain.model.article.ArticleLike;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.domain.model.member.Member;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -87,17 +85,9 @@ public class ArticleController {
         model.addAttribute("commentDto", new CommentDto());
 
 
-        int likeState = 0;
         Member member = memberService.findByUsername(authentication.getName());
-        Collection<ArticleLike> likes = member.getLikes();
-        for (ArticleLike like : likes) {
-            if (Objects.equals(like.getArticle().getId(), articleId)) {
-                likeState = 1;
-                break;
-            }
-        }
+        int likeState = likeService.isMemberLikeArticle(member.getId(), articleId);
         model.addAttribute("likeState", likeState);
-
 
         // 조회수 중복 방지
         Cookie oldCookie = null;
@@ -157,7 +147,7 @@ public class ArticleController {
                 .isNotice(article.getIsNotice())
                 .build();
 
-        CategoryDto categoryDto = categoryService.getCategoryDto();
+        CategoryListDto categoryDto = categoryService.getCategoryListDto();
         model.addAttribute("categoryDto", categoryDto);
         model.addAttribute("article", dto);
         model.addAttribute("categoryId", categoryId);
@@ -166,21 +156,10 @@ public class ArticleController {
     }
 
     @PostMapping("/{categoryId}/update/{articleId}")
-    public String updateArticle(@ModelAttribute("article") ArticleRequestDto articleRequestDto,
+    public String updateArticle(@ModelAttribute("article") ArticleRequestDto dto,
                                 @PathVariable("categoryId") Long categoryId,
                                 @PathVariable("articleId") Long articleId) {
-
-        Article article = articleService.findArticleById(articleId).orElseThrow();
-        article.setTitle(articleRequestDto.getTitle());
-        article.setContent(articleRequestDto.getContent());
-        if (articleRequestDto.getIsNotice()) {
-            article.setIsNotice((byte) 1);
-        } else {
-            article.setIsNotice((byte) 0);
-        }
-        article.setCategory(articleRequestDto.getCategory());
-
-        articleService.save(article);
+        articleService.update(articleId, dto);
         return "redirect:/" + categoryId + "/v/" + articleId;
     }
 
@@ -196,6 +175,9 @@ public class ArticleController {
         return "articles/newArticle";
     }
 
+    /**
+     * 게시글 등록
+     */
     @PostMapping("/{categoryId}/new")
     public String submitNewArticle(@ModelAttribute("article") ArticleRequestDto articleRequestDto,
                                    @PathVariable("categoryId") Long categoryId,
@@ -203,10 +185,10 @@ public class ArticleController {
 
         articleRequestDto.setAuthor(memberService.findByUsername(authentication.getName()));
         articleRequestDto.setCategory(articleService.findCategoryByCategoryId(categoryId));
-        Article article = articleRequestDto.toEntity();
-        articleService.save(article);
 
-        return "redirect:/" + categoryId;
+        Long articleId = articleService.save(articleRequestDto);
+
+        return "redirect:/" + categoryId + "/v/" + articleId;
     }
 
     /**

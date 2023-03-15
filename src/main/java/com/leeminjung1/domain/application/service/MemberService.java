@@ -1,4 +1,4 @@
-package com.leeminjung1.domain.application;
+package com.leeminjung1.domain.application.service;
 
 import com.leeminjung1.domain.application.dtos.RegisterDto;
 import com.leeminjung1.domain.model.member.Member;

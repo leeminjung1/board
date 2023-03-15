@@ -3,16 +3,15 @@ package com.leeminjung1.domain.model.category;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leeminjung1.domain.model.article.Article;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "category")
 @Getter
-@Setter
 @NoArgsConstructor
 //@ToString
 public class Category {
@@ -42,22 +41,24 @@ public class Category {
     @JsonIgnore
     private List<Article> articles = new ArrayList<>();
 
+    @Formula("(select count(*) from article a where a.category_id = category_id)")
+    private int countOfArticles;
+
     @Builder
-    public Category(Long id, String name, Integer priority, Category parent) {
-        this.id = id;
+    public Category(String name, Integer priority, Integer depth, Category parent) {
         this.name = name;
-        this.parent = parent;
-        this.depth = (parent.depth == 0 ? 1 : 2);
         this.priority = priority;
+        this.depth = depth;
+        this.parent = parent;
     }
 
-    public static Category getRoot() {
-        Category category = new Category();
-        category.setName("root");
-        category.setPriority(0);
-        category.setDepth(0);
-        category.setParent(null);
-        return category;
+    public static Category makeRoot() {
+        return Category.builder()
+                .name("root")
+                .priority(0)
+                .depth(0)
+                .parent(null)
+                .build();
     }
 
     @Override

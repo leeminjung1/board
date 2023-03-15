@@ -33,11 +33,11 @@
                                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                                    href="javascript:;"
                                    th:onclick="deleteCategory([[${category.id}]])"
-                                   th:classappend="${#lists.size(category.children)!=0 || #lists.size(category.articles)!=0} ? disabled"
-                                   th:attr="aria-disabled=${#lists.size(category.children)!=0 || #lists.size(category.articles)!=0 ? true: false}">삭제</a>
+                                   th:classappend="${!#lists.isEmpty(category.children) || category.entries > 0} ? disabled"
+                                   th:attr="aria-disabled=${!#lists.isEmpty(category.children) || category.entries > 0 ? true: false}">삭제</a>
                             </div>
                         </div>
-                        <div th:if="${#lists.size(category.children)!=0}">
+                        <div th:if="${!#lists.isEmpty(category.children)}">
                             <div th:each="child : ${category.children}"
                                  th:if="${child.depth == 2}"
                                  th:id="${child.id}"
@@ -53,8 +53,8 @@
                                            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                                            href="javascript:;"
                                            th:onclick="deleteCategory([[${child.id}]])"
-                                           th:classappend="${#lists.size(child.children)!=0 || #lists.size(child.articles)!=0} ? disabled"
-                                           th:attr="aria-disabled=${#lists.size(child.children)!=0 || #lists.size(child.articles)!=0 ? true: false}">삭제</a>
+                                           th:classappend="${child.entries > 0} ? disabled"
+                                           th:attr="aria-disabled=${child.entries > 0 ? true: false}">삭제</a>
                                     </div>
                                 </div>
                             </div>

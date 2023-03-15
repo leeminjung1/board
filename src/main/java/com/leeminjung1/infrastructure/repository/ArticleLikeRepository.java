@@ -9,15 +9,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> {
     @Modifying
     @Query(value = "INSERT INTO article_like(article_id, member_id) VALUES(:articleId, :memberId)", nativeQuery = true)
-    int likeArticle(Long articleId, Long memberId);
+    int like(Long articleId, Long memberId);
 
     @Modifying
     @Query(value = "DELETE FROM article_like WHERE article_id = :articleId AND member_id = :memberId", nativeQuery = true)
-    int unlikeArticle(Long articleId, Long memberId);
+    int unlike(Long articleId, Long memberId);
 
     List<ArticleLike> findAllByArticleId(Long articleId);
 
@@ -25,4 +26,6 @@ public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> 
     Page<Article> findArticleByMemberId(Pageable pageable, Long memberId);
 
     long countByMemberId(Long memberId);
+
+    Optional<ArticleLike> findByArticleIdAndMemberId(Long articleId, Long memberId);
 }

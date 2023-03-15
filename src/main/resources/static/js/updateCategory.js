@@ -1,8 +1,8 @@
 var idx = -1;
-var dataArray = [];
 var appendArr = [];
 var deleteArr = [];
 var updateArr = [];
+var children = [];
 var result = [];
 
 $(document).ready(function() {
@@ -31,7 +31,7 @@ $(document).ready(function() {
             "append": appendArr,
             "update": updateArr
         }
-
+/*
         for(let i = 0; i < result.length; i++){
 //                updateArr[i].priority = result.indexOf(i);
             categories.find(element => element.id == Number(result[i])).priority = i;
@@ -40,16 +40,16 @@ $(document).ready(function() {
         for(let i = 0; i < categories.length; i++) {
             updateArr.push(categories[i]);
             console.log(categories[i]);
-        }
+        }*/
 
         $.ajax({
-             type : "POST",
+             type : "PUT",
              url : "/manage/category",
              contentType: "application/json",
              data : JSON.stringify(paramList)
         }).done(res=>{
-            console.log("성공");
-//            window.location.reload();
+            alert('변경되었습니다.');
+            window.location.reload();
         }).fail(error=>{
             console.log("오류", error);
         });
@@ -71,14 +71,16 @@ $(function() {
 });
 
 function addNewCategory(name){
-    var category = {
+    var categoryDto = {
         "id" : idx,
         "name"  : name,
         "priority" : Math.max(...categories.map(o => o.priority)) + 1,
         "parentId" : 1,
+        "children" : children,
+        "depth" : 1
     }
-    appendArr.push(category);
-    categories.push(category);
+    appendArr.push(categoryDto);
+    categories.push(categoryDto);
 }
 
 function editName(id){
@@ -96,9 +98,19 @@ function cancelEditName(id){
 }
 
 function submitEditName(id){
+    var category = categories.find(element => element.id == Number(id));
     var name =  $('input[name=categoryName]').val();
-    categories.find(element => element.id == Number(id)).name = name;
-    console.log(categories.find(element => element.id == Number(id)));
+    category.name = name;
+
+    var categoryDto = {
+        "id" : id,
+        "name"  : category.name,
+        "priority" : category.priority,
+        "parentId" : 1,
+        "children" : category.children,
+        "depth" : category.depth
+    }
+    updateArr.push(categoryDto);
 
     $('#'+ id).children().children('input').remove();
     $('#'+ id).children().children('a').remove();

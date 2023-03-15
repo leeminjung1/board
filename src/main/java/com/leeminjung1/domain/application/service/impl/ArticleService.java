@@ -1,6 +1,7 @@
-package com.leeminjung1.domain.application.impl;
+package com.leeminjung1.domain.application.service.impl;
 
 import com.leeminjung1.domain.application.dtos.ArticleListDto;
+import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.infrastructure.repository.ArticleLikeRepository;
@@ -9,15 +10,14 @@ import com.leeminjung1.infrastructure.repository.CategoryRepository;
 import com.leeminjung1.infrastructure.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -41,83 +41,103 @@ public class ArticleService {
         return articleRepository.countByAuthorId(authorId);
     }
 
+    @Transactional(readOnly = true)
     public long countArticlesByCommentWriterId(Long writerId) {
         return articleRepository.countArticleCommentedByWriterId(writerId);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Article> findArticleById(long articleId) {
-        Optional<Article> article = articleRepository.findById(articleId);
-        return article;
+        return articleRepository.findById(articleId);
     }
 
+    @Transactional(readOnly = true)
     public Page<ArticleListDto> findAllArticles(Pageable pageable) {
-        Page<Article> articles = articleRepository.findAllByOrderByIdDesc(pageable);
-        return articles.map(ArticleListDto::new);
+        List<ArticleListDto> list = articleRepository.findAllByOrderByIdDesc(pageable).stream()
+                .map(ArticleListDto::new)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(list);
     }
 
+    @Transactional(readOnly = true)
     public Page<ArticleListDto> findArticlesByCategory(Pageable pageable, Long categoryId) {
-        Page<Article> articles = articleRepository.findByCategoryIdOrderByIdDesc(pageable, categoryId);
-        return articles.map(ArticleListDto::new);
+        return articleRepository.findByCategoryIdOrderByIdDesc(pageable, categoryId)
+                .map(ArticleListDto::new);
     }
 
+    @Transactional(readOnly = true)
     public Page<ArticleListDto> findArticlesThatCommentedByMemberId(Pageable pageable, Long memberId) {
-        Page<Article> articles = commentRepository.findArticlesByWriterIdOrderByIdDesc(pageable, memberId);
-        return articles.map(ArticleListDto::new);
+        return commentRepository.findArticlesByWriterIdOrderByIdDesc(pageable, memberId)
+                .map(ArticleListDto::new);
     }
 
+    @Transactional(readOnly = true)
     public Page<ArticleListDto> findArticlesThatLikedByMemberId(Pageable pageable, Long memberId) {
-        Page<Article> articles = likeRepository.findArticleByMemberId(pageable, memberId);
-        return articles.map(ArticleListDto::new);
+        return likeRepository.findArticleByMemberId(pageable, memberId)
+                .map(ArticleListDto::new);
     }
 
+    @Transactional(readOnly = true)
     public Category findCategoryByCategoryId(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow();
     }
 
-    public Long save(Article article) {
-        Article save = articleRepository.save(article);
-        return save.getId();
+    @Transactional(readOnly = true)
+    public Page<ArticleListDto> findArticlesByAuthorId(Pageable pageable, Long authorId) {
+        return articleRepository.findByAuthorIdOrderByIdDesc(pageable, authorId)
+                .map(ArticleListDto::new);
     }
 
-    public Page<ArticleListDto> findArticlesByAuthorId(Pageable pageable, Long authorId) {
-        Page<Article> articles = articleRepository.findByAuthorIdOrderByIdDesc(pageable, authorId);
-        return articles.map(ArticleListDto::new);
+    @Transactional(readOnly = true)
+    public List<ArticleListDto> findNoticeArticleTop20() {
+        return articleRepository.findTop20ByIsNoticeOrderByIdDesc((byte) 1).stream()
+                .map(ArticleListDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Long save(ArticleRequestDto dto) {
+        return articleRepository.save(dto.toEntity())
+                .getId();
+    }
+
+    @Transactional
+    public void update(Long id, ArticleRequestDto dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        article.updateArticle(dto);
     }
 
     @Transactional
     public void updateViewCount(Long id) {
         Article article = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다"));
-        article.setViewCount(article.getViewCount() + 1);
-        articleRepository.save(article);
+        article.updateViewCount();
     }
 
+    @Transactional
     public void deleteById(Long id) {
         articleRepository.deleteById(id);
     }
 
+    @Transactional
     public void updateLikeCount(Long id) {
         Article article = articleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다"));
-        article.setLikeCount(likeRepository.findAllByArticleId(id).size());
-        articleRepository.save(article);
+        article.updateLikeCount();
     }
 
-    public List<ArticleListDto> findNoticeArticleTop20() {
-        return articleRepository.findTop20ByIsNoticeOrderByIdDesc((byte) 1).stream().map(ArticleListDto::new).collect(Collectors.toList());
-    }
-
+    @Transactional(readOnly = true)
     public List<ArticleListDto> findNoticeArticleDtos() {
-        List<Article> notices = articleRepository.findByIsNotice((byte) 1);
-        List<ArticleListDto> list = new ArrayList<>();
-        for (Article article : notices) {
-            list.add(new ArticleListDto(article));
-        }
-        return list;
+        return articleRepository.findByIsNotice((byte) 1).stream()
+                .map(ArticleListDto::new)
+                .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<Article> findNoticeArticles() {
         return articleRepository.findByIsNotice((byte) 1);
     }
 
+    @Transactional
     public void deleteByIdIn(List<Long> ids) {
         articleRepository.deleteByIdIn(ids);
     }

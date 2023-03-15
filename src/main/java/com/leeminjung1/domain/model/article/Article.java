@@ -1,6 +1,7 @@
 package com.leeminjung1.domain.model.article;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.leeminjung1.domain.application.dtos.ArticleRequestDto;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.domain.model.comment.Comment;
 import com.leeminjung1.domain.model.file.File;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "article")
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Article {
     @Id
@@ -24,6 +25,7 @@ public class Article {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(length = 500, nullable = false)
     private String title;
 
     @Column(columnDefinition = "LONGTEXT")
@@ -57,18 +59,29 @@ public class Article {
     private Byte isNotice;
 
     @Builder
-    public Article(String title, String content, Category category, Member author, LocalDateTime createdAt, Integer viewCount, Integer likeCount, Byte isNotice) {
+    public Article(String title, String content, Category category, Member author, Byte isNotice) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.author = author;
-        this.createdAt = createdAt;
+        this.isNotice = isNotice;
+        this.createdAt = LocalDateTime.now();
         this.viewCount = 0;
         this.likeCount = 0;
-        this.isNotice = isNotice;
     }
 
-    public void updateViewCount(Integer viewCount) {
-        this.viewCount = viewCount;
+    public void updateArticle(ArticleRequestDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.category = dto.getCategory();
+        this.isNotice = dto.toEntity().getIsNotice();
+    }
+
+    public void updateViewCount() {
+        this.viewCount++;
+    }
+
+    public void updateLikeCount() {
+        this.likeCount = likes.size();
     }
 }

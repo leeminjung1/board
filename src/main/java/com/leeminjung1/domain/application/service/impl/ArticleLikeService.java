@@ -1,4 +1,4 @@
-package com.leeminjung1.domain.application.impl;
+package com.leeminjung1.domain.application.service.impl;
 
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.article.ArticleLike;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +20,12 @@ public class ArticleLikeService {
 
     @Transactional
     public void likeArticle(Long articleId, Long memberId) {
-        articleLikeRepository.likeArticle(articleId, memberId);
+        articleLikeRepository.like(articleId, memberId);
     }
 
     @Transactional
     public void unlikeArticle(Long articleId, Long memberId) {
-        articleLikeRepository.unlikeArticle(articleId, memberId);
+        articleLikeRepository.unlike(articleId, memberId);
     }
 
     public List<ArticleLike> findAllByArticleId(Long articleId) {
@@ -39,6 +38,13 @@ public class ArticleLikeService {
 
     public long countArticleLikeByMemberId(Long memberId) {
         return articleLikeRepository.countByMemberId(memberId);
+    }
+
+    public int isMemberLikeArticle(Long memberId, Long articleId) {
+        if (articleLikeRepository.findByArticleIdAndMemberId(articleId, memberId).isEmpty()) {
+            return 0;
+        }
+        return 1;
     }
 
 }

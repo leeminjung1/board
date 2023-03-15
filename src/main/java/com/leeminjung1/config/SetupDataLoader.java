@@ -18,7 +18,6 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -58,13 +57,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         member.setImgUrl("user_profile_default.png");
         userRepository.save(member);
 
-        Category root = Category.getRoot();
+        Category root = Category.makeRoot();
         categoryRepository.save(root);
 
         Category category0 = Category.builder()
                 .name("category0")
                 .parent(root)
                 .priority(0)
+                .depth(1)
                 .build();
         categoryRepository.save(category0);
 
@@ -72,6 +72,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .name("category00")
                 .parent(category0)
                 .priority(0)
+                .depth(2)
                 .build();
         categoryRepository.save(category00);
 
@@ -79,12 +80,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .parent(category0)
                 .name("category01")
                 .priority(1)
+                .depth(2)
                 .build();
         categoryRepository.save(category01);
 
         Category category1 = Category.builder()
                 .name("category1")
                 .parent(root)
+                .depth(1)
                 .priority(1)
                 .build();
         categoryRepository.save(category1);
@@ -93,6 +96,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .name("category2")
                 .parent(root)
                 .priority(2)
+                .depth(1)
                 .build();
         categoryRepository.save(category2);
 
@@ -100,6 +104,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .name("category20")
                 .parent(category2)
                 .priority(0)
+                .depth(2)
                 .build();
         categoryRepository.save(category20);
 
@@ -108,9 +113,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .title("THIS IS TITLE")
                 .content("<p><em><strong>hello!! this is example content:)</strong></em></p>")
                 .category(category0)
-                .createdAt(LocalDateTime.now())
-                .likeCount(0)
-                .viewCount(0)
                 .build();
         articleRepository.save(article);
 
@@ -119,9 +121,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .title("test")
                 .content("<p>hello</p><p>world</p>")
                 .category(category0)
-                .createdAt(LocalDateTime.now())
-                .likeCount(0)
-                .viewCount(0)
                 .isNotice((byte) 1)
                 .build();
         articleRepository.save(article2);

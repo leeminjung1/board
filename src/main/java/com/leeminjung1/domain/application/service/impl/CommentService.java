@@ -1,4 +1,4 @@
-package com.leeminjung1.domain.application.impl;
+package com.leeminjung1.domain.application.service.impl;
 
 import com.leeminjung1.domain.application.dtos.CommentDto;
 import com.leeminjung1.domain.application.dtos.CommentListDto;

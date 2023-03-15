@@ -2,18 +2,15 @@ package com.leeminjung1.web.pages;
 
 import com.leeminjung1.config.BackedLoginService;
 import com.leeminjung1.domain.application.dtos.*;
-import com.leeminjung1.domain.application.impl.ArticleLikeService;
-import com.leeminjung1.domain.application.impl.ArticleService;
-import com.leeminjung1.domain.application.impl.CommentService;
-import com.leeminjung1.domain.application.impl.MemberServiceImpl;
+import com.leeminjung1.domain.application.service.impl.ArticleLikeService;
+import com.leeminjung1.domain.application.service.impl.ArticleService;
+import com.leeminjung1.domain.application.service.impl.CommentService;
+import com.leeminjung1.domain.application.service.impl.MemberServiceImpl;
 import com.leeminjung1.domain.model.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,6 +58,33 @@ public class MemberController {
         return "redirect:/login";
     }
 
+    /**
+     *아이디/비밀번호 찾기
+     */
+    @GetMapping("/forgetPassword")
+    public String forgot() {
+        return "users/forgotPassword";
+    }
+
+    /**
+     * 비밀번호 초기화
+     */
+    /*@PostMapping("user/resetPassword")
+    public String resetPassword(HttpServletRequest request, @RequestParam("email") String email) {
+        Member member = memberService.findByEmail(email);
+        if (member == null) {
+            throw new IllegalArgumentException();
+        }
+
+        String token = UUID.randomUUID().toString();
+        memberService.createPasswordResetTokenForUser(member, token);
+        mailSender.send(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, member));
+        return new GenericResponse(
+                messages.getMessage("message.resetPasswordEmail", null,
+                        request.getLocale()));
+    }
+
+*/
     /**
      * 모든 사용자 조회
      */

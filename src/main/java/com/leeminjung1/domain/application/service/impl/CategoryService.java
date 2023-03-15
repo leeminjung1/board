@@ -1,6 +1,7 @@
-package com.leeminjung1.domain.application.impl;
+package com.leeminjung1.domain.application.service.impl;
 
 import com.leeminjung1.domain.application.dtos.CategoryDto;
+import com.leeminjung1.domain.application.dtos.CategoryListDto;
 import com.leeminjung1.domain.model.article.Article;
 import com.leeminjung1.domain.model.category.Category;
 import com.leeminjung1.infrastructure.repository.ArticleRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -54,19 +56,33 @@ public class CategoryService {
     }*/
 
 
-    public CategoryDto getCategoryDto() {
-        return new CategoryDto(categoryRepository.findAllByOrderByParentIdAscPriorityAsc());
+    @Transactional(readOnly = true)
+    public CategoryListDto getCategoryListDto() {
+        return new CategoryListDto(
+                categoryRepository.findAllByOrderByParentIdAscPriorityAsc().stream()
+                        .map(CategoryDto::new)
+                        .collect(Collectors.toList()));
     }
 
-    public void updateCategory(Category category) {
-        categoryRepository.save(category);
+    public void updateCategories(List<CategoryDto> categoryDto) {
+        for (CategoryDto dto : categoryDto) {
+            categoryRepository.update(dto.getPriority(), dto.getDepth(), dto.getName(), dto.getId());
+        }
     }
 
-    public void saveCategories(List<Category> categories) {
-        categoryRepository.saveAll(categories);
+    public void saveCategories(List<CategoryDto> categoryDto) {
+        List<Category> list = new ArrayList<>();
+        for (CategoryDto dto : categoryDto) {
+            list.add(Category.builder()
+                    .parent(categoryRepository.findById(dto.getParentId()).get())
+                    .depth(dto.getDepth())
+                    .priority(dto.getPriority()).name(dto.getName())
+                    .build());
+        }
+        categoryRepository.saveAll(list);
     }
 
     public void deleteAllById(List<Long> ids) {
-        categoryRepository.deleteAllById(ids);
+        categoryRepository.deleteCategoriesWithIds(ids);
     }
 }

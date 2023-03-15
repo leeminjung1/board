@@ -1,16 +1,9 @@
 package com.leeminjung1.domain.application.dtos;
 
 import com.leeminjung1.domain.model.article.Article;
-import com.leeminjung1.domain.model.category.Category;
-import com.leeminjung1.domain.model.member.Member;
-import com.leeminjung1.infrastructure.repository.CommentRepository;
 import com.leeminjung1.infrastructure.utils.DateUtil;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

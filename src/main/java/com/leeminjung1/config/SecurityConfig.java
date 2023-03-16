@@ -15,7 +15,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 

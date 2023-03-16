@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<script src="https://cdn.tiny.cloud/1/rqnyz8m91tstir8f7fjklu4kzpp2ntx0i16g7l9t4lcaihtp/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+tinymce.init({
+selector: '#content',
+height: 500,
+resize: false
+});
+</script>
+<body>
+<div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
+        <div class="mb-2">
+            <a class="fs-3"
+               th:href="@{/{categoryId}/ (categoryId=${category.id})}"
+               th:text="${category.name}"></a>
+        </div>
+        <div class="mt-2">
+            <h3>글쓰기</h3>
+        </div>
+        <form class="my-5" method="post" th:action="@{/{categoryId}/new (categoryId=${category.id})}" th:object="${article}">
+            <div class="row row-cols-1 gap-4">
+                <div class="col">
+                    <label>공지로 등록</label>
+                    <input class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for notice" th:field="*{isNotice}">
+                </div>
+                <div class="col">
+                    <label class="form-label" for="title">제목</label>
+                    <input class="form-control" type="text" id="title" placeholder="제목을 입력해주세요." th:field="*{title}">
+                </div>
+                <div class="col">
+                    <textarea id="content" th:field="*{content}" placeholder="내용을 입력해주세요."></textarea>
+                </div>
+            </div>
+            <div class="mt-5 d-flex gap-3 justify-content-end">
+                <button type="submit" class="btn btn-primary">등록</button>
+            </div>
+        </form>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div>
+</body>
+</html>

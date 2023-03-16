@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<table th:fragment="commentTable" class="table table-hover rounded-top">
+    <div th:if="${totalArticleCount==0}"
+         class="bg-light p-4 text-center">
+        작성한 댓글이 없습니다.
+    </div>
+    <thead th:unless="${totalArticleCount==0}" class="table-light text-center">
+    <tr>
+        <th>댓글</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="comment : ${comments}">
+        <td class="">
+            <a th:href="@{/{categoryId}/v/{articleId} (categoryId=${comment.categoryId},articleId=${comment.articleId})}">
+                <div th:text="${comment.content}">
+                    <span th:if="${#strings.contains(comment.createdAt, '전')}"
+                          style="background-image: url('/images/ico-new-article.svg'); transform-origin: center center 1px; width:12px; height: 12px; background-repeat:no-repeat;"
+                          class="d-inline-block"></span>
+                </div>
+                <div class="text-secondary fw-light" th:text="${comment.createdAt}"></div>
+                <div class="text-secondary fw-light mt-2">
+                    [[${comment.title}]]
+                    <span th:text="|[${comment.commentCount}]|" style="color: #ff2f3b"></span>
+                </div>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>

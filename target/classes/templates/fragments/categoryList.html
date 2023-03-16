@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="categoryList" style="width:300px">
+    <ul th:fragment="categoryList-ul" class="list-group">
+        <li th:if="${category.depth == 1}"
+                th:each="category : ${categoryDto.categories}"
+                class="list-group-item"
+                th:fragment="categoryList-li" >
+                <div class="py-2">
+                    <a class="fw-bold"
+                       th:href="@{/{categoryId}/ (categoryId=${category.id})}"
+                       th:text="|${category.name}|">
+                    </a>
+                </div>
+                <ul class="list-group">
+                    <li th:if="${child.depth == 2}"
+                        th:each="child : ${category.children}"
+                        class="list-group-item">
+                        <div>
+                            <a th:href="@{/{categoryId}/ (categoryId=${child.id})}"
+                               th:text="|${child.name}|">
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+</ul>
+</div>

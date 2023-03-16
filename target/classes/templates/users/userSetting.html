@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
+        <div>
+            <form method="post" th:action="@{/settings}" th:object="${member}">
+                <h2 class="text-xl font-semibold leading-6 text-gray-900">회원정보</h2>
+                <div class="my-10 flex flex-col lg:flex-row">
+                    <div class="flex-grow space-y-6">
+                        <div>
+                            <label class="form-label" th:for="*{email}">이메일</label>
+                            <input class="form-control" type="text" th:field="*{email}" readonly>
+                        </div>
+                        <div>
+                            <label class="form-label" th:for="*{username}">username</label>
+                            <input class="form-control" th:field="*{username}">
+                        </div>
+                        <div>
+                            <label class="form-label" for="password">비밀번호 변경</label>
+                            <input class="form-control" type="password" id="password" th:field="*{password}">
+                        </div>
+                        <div>
+                            <p>
+                                프로필 이미지 변경
+                            </p>
+                            <div>
+                                <img th:src="'/images/' + ${member.imgUrl}"
+                                     alt="프로필 사진"
+                                     width="64"
+                                     height="64"
+                                     th:if="${member.imgUrl != null}" />
+                                <button>
+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 d-flex gap-3 justify-content-end">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

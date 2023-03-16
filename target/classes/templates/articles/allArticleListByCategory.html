@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
+        <div class="mb-2 p-4 bg-primary bg-opacity-10 rounded text-center">
+            <h3 th:text="${category.name}"></h3>
+        </div>
+        <div th:replace="fragments/listStyle :: listStyle" />
+        <div>
+            <button type="button" th:onclick="|location.href='@{/{categoryId}/new(categoryId=${categoryId})}'|" class="btn btn-primary">글쓰기</button>
+        </div>
+        <div id="article_list_area">
+            <table class="table table-hover">
+                <thead th:replace="fragments/articleTable :: thead"/>
+                <tbody th:replace="fragments/articleTable :: tbody(${notices}, 'notice')"/>
+                <tbody th:replace="fragments/articleTable :: tbody(${articles}, 'article_id')"/>
+            </table>
+        </div>
+        <div>
+            <nav th:replace="fragments/pagination::pagination"></nav>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div>
+<script>
+    const _totalCount = [[${totalArticleCount}]];
+</script>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/pagination.js}"></script>
+<script type="text/javascript" th:src="@{/js/hideNotice.js}"></script>
+</body>
+</html>

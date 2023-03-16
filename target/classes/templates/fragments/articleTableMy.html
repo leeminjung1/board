@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<table th:fragment="articleTableNoAuthor" class="table table-hover rounded-top">
+    <div th:if="${totalArticleCount==0}"
+         class="bg-light p-4 text-center">
+        작성한 게시글이 없습니다.
+    </div>
+    <thead th:unless="${totalArticleCount==0}" class="table-light text-center">
+    <tr>
+        <th>제목</th>
+        <th width="15%">작성일</th>
+        <th width="10%">조회</th>
+        <th width="10%">좋아요</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="article : ${articles}" class="align-middle">
+        <td>
+            <div th:if="${member.username == #authentication.name}" class="d-table-cell px-2">
+                <input type="checkbox" name="_selected_" th:value="${article.id}" class="d-inline-block">
+            </div>
+            <div class="d-table-cell pe-2 text-center" style="width:75px; font-size:13px;">
+                <div th:text="${article.id}" class="d-inline-block"></div>
+            </div>
+            <div class="d-table-cell">
+                <a th:href="@{/{categoryId}/v/{articleId} (categoryId=${article.categoryId},articleId=${article.id})}" class="me-2">
+                    <span th:text="|[${article.categoryName}]|" class="text-secondary"></span>
+                    [[${article.title}]]
+                </a>
+                <span th:if="${article.commentCount > 0}" th:text="|[${article.commentCount}]|" style="color: #ff2f3b"></span>
+                <span th:if="${#strings.contains(article.createdAt, '전')}"
+                      style="background-image: url('/images/ico-new-article.svg'); transform-origin: center center 1px; width:12px; height: 12px; background-repeat:no-repeat;"
+                      class="d-inline-block"></span>
+            </div>
+        </td>
+        <td class="text-center" th:text="${article.createdAt}" style="font-size:13px;"></td>
+        <td class="text-center" th:text="${article.viewCount}" style="font-size:13px;"></td>
+        <td class="text-center" th:text="${article.likeCount}" style="font-size:13px;"></td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header :: header">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
+        <div sec:authorize="hasRole('ADMIN')">
+            <a th:href=@{manage/category}
+               th:text="카테고리관리">
+            </a>
+        </div>
+        <div th:replace="fragments/categoryList :: categoryList" />
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div>
+</body>
+</html>

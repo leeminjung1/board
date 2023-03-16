@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div>
+    <header th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div class="container">
+        <div id="title_area">
+            <h3 class="fw-bold">전체글보기</h3>
+        </div>
+        <div th:replace="fragments/listStyle :: listStyle"></div>
+        <div id="article_list_area">
+            <table class="table table-hover">
+                <thead th:replace="fragments/articleTable :: thead"/>
+                <tbody th:replace="fragments/articleTable :: tbody(${notices}, 'notice')"/>
+                <tbody th:replace="fragments/articleTable :: tbody(${articles}, 'category_name')"/>
+            </table>
+        </div>
+        <div>
+            <nav th:replace="fragments/pagination::pagination"></nav>
+        </div>
+    </div>
+    <footer th:replace="fragments/footer :: footer" />
+</div>
+<script>
+    const _totalCount = [[${totalArticleCount}]];
+</script>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/pagination.js}"></script>
+<script type="text/javascript" th:src="@{/js/hideNotice.js}"></script>
+</body>
+</html>

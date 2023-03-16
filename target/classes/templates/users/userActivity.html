@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+a:link {
+text-decoration:none;
+color: black;
+}
+a:visited {
+text-decoration:none;
+color: black;
+}
+a:hover {
+text-decoration:underline;
+color: black;
+}
+a:active {
+text-decoration:none;
+color: black;
+}
+.active{
+    font-weight:bold;
+    border-bottom: 2px solid;
+}
+</style>
+<body>
+<div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="container">
+        <div class="d-flex">
+            <div class="w-100">
+                <div class="overflow-hidden border rounded">
+                    <div class="my-5 mx-4 d-flex align-items-center">
+                        <img th:src="'/images/' + ${member.imgUrl}"
+                             alt="프로필 사진"
+                             width="64"
+                             height="64"
+                             th:if="${member.imgUrl != null}" />
+                        <div class="ms-3 fs-4 fw-bold" th:text="${member.username}" />
+                    </div>
+                    <div class="gap-4 d-flex position-relative col px-3 border-top bg-light">
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3"
+                           th:href="@{/members/{memberId}(tab='articles', memberId=${member.id})}"
+                           th:classappend="${#request.getParameter('tab') == null or #request.getParameter('tab') == 'articles'}? 'active'">
+                            <span>작성글</span>
+                        </a>
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3"
+                           th:href="@{/members/{memberId}(tab='comments', memberId=${member.id})}"
+                           th:classappend="${#request.getParameter('tab') != null and #request.getParameter('tab') == 'comments'}? 'active'">
+                            <span>작성댓글</span>
+                        </a>
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3"
+                           th:href="@{/members/{memberId}(tab='commentedArticles', memberId=${member.id})}"
+                           th:classappend="${#request.getParameter('tab') != null and #request.getParameter('tab') == 'commentedArticles'}? 'active'">
+                            <span>댓글단 글</span>
+                        </a>
+                        <a class="overflow-hidden d-flex justify-content-center px-1 py-3"
+                           th:href="@{/members/{memberId}(tab='likedArticles', memberId=${member.id})}"
+                           th:classappend="${#request.getParameter('tab') != null and #request.getParameter('tab') == 'likedArticles'}? 'active'">
+                        <span>좋아요한 글</span>
+                        </a>
+                    </div>
+                </div>
+                <div th:if="${#request.getParameter('tab')} == null or ${#request.getParameter('tab')}=='articles'"
+                     class="mt-2 mb-5 pb-5 border-bottom">
+                        <table th:replace="fragments/articleTableMy :: articleTableNoAuthor"/>
+                    <div th:if="${member.username == #authentication.name}" class="mt-2 mb-4 overflow-auto">
+                        <div class="float-start">
+                            <div>
+                                <input type="checkbox" name="check_all" id="check_all">
+                                <label for="check_all">전체선택</label>
+                            </div>
+                        </div>
+                        <div class="float-end">
+                            <button class="btnDelete btn btn-light">삭제</button>
+                        </div>
+                    </div>
+                    <div>
+                        <nav th:replace="fragments/pagination::pagination"></nav>
+                    </div>
+                </div>
+                <div th:if="${#request.getParameter('tab')} != null and (${#request.getParameter('tab')}=='likedArticles' or ${#request.getParameter('tab')}=='commentedArticles')"
+                     class="mt-2 mb-5 pb-5 border-bottom">
+                    <table th:replace="fragments/articleTable :: articleTable(${articles}, 'article_id')"/>
+                    <div>
+                        <nav th:replace="fragments/pagination::pagination"></nav>
+                    </div>
+                </div>
+                <div th:if="${#request.getParameter('tab')} !=null and ${#request.getParameter('tab')}=='comments'"
+                        class="mt-2 mb-5 pb-5 border-bottom">
+                    <table th:replace="fragments/commentTable :: commentTable"/>
+                    <div>
+                        <nav th:replace="fragments/pagination::pagination"></nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div>
+<script>
+const _totalCount = [[${totalArticleCount}]];
+
+// 전체선택/해제
+$('input[name=check_all]').on('change', function(){
+    $('input[name=_selected_]').prop('checked', this.checked);
+});
+
+$('.btnDelete').on("click", function () {
+    var arr = $('input[name=_selected_]:checked').serializeArray().map(function(item) { return item.value });
+    var str = $('input[name=_selected_]:checked').serialize(); // 이건 QueryString 방식으로
+    console.log(arr);
+
+    $.ajax({
+        type: "post",
+        url: "/api/delete/selectedArticles",
+        data: {selectedValues: arr},
+        traditional: true
+    }).done(res=>{
+        console.log("성공");
+        window.location.reload();
+    }).fail(error=>{
+        console.log("오류", error);
+    });
+
+});
+
+</script>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/pagination.js}"></script>
+</body>
+</html>

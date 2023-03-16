@@ -1,0 +1,21 @@
+<div th:fragment="listStyle" class="overflow-auto py-2">
+    <div class="float-start align-baseline">
+        <span th:text="${#numbers.formatInteger(totalArticleCount, 0, 'COMMA')}" class="fw-semibold"></span>
+        <span>개의 글</span>
+    </div>
+    <div class="float-end">
+        <div class="d-inline-block">
+            <input type="checkbox" id="hideNotice" onclick="toggleHideNotice()">
+            <label for="hideNotice">공지 숨기기</label>
+        </div>
+        <div class="ms-3 ps-3 border-start d-inline-block">
+            <select id="size" class="form-control" onchange="selectSize()">
+                <option value="" selected="selected" hidden="hidden" th:text="|${param.size==null?20:param.size}개씩|"></option>
+                <option value="10" >10개씩</option>
+                <option value="20">20개씩</option>
+                <option value="30">30개씩</option>
+                <option value="50">50개씩</option>
+            </select>
+        </div>
+    </div>
+</div>

@@ -27,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    boolean alreadySetup = false;
+    boolean alreadySetup = true;
 
     private final MemberRepository userRepository;
     private final RoleRepository roleRepository;

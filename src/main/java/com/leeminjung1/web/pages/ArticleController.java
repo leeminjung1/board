@@ -138,20 +138,12 @@ public class ArticleController {
         Article article = articleService.findArticleById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
-
-        ArticleRequestDto dto = ArticleRequestDto.builder()
-                .author(article.getAuthor())
-                .category(article.getCategory())
-                .content(article.getContent())
-                .title(article.getTitle())
-                .isNotice(article.getIsNotice())
-                .build();
+        model.addAttribute("article", new ArticleRequestDto(article));
 
         CategoryListDto categoryDto = categoryService.getCategoryListDto();
         model.addAttribute("categoryDto", categoryDto);
-        model.addAttribute("article", dto);
-        model.addAttribute("categoryId", categoryId);
-        model.addAttribute("articleId", articleId);
+//        model.addAttribute("categoryId", categoryId);
+//        model.addAttribute("articleId", articleId);
         return "articles/updateArticle";
     }
 
@@ -183,11 +175,7 @@ public class ArticleController {
                                    @PathVariable("categoryId") Long categoryId,
                                    Authentication authentication) {
 
-        articleRequestDto.setAuthor(memberService.findByUsername(authentication.getName()));
-        articleRequestDto.setCategory(articleService.findCategoryByCategoryId(categoryId));
-
-        Long articleId = articleService.save(articleRequestDto);
-
+        Long articleId = articleService.save(authentication.getName(), articleRequestDto);
         return "redirect:/" + categoryId + "/v/" + articleId;
     }
 

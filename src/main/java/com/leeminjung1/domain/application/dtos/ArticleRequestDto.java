@@ -13,35 +13,31 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ArticleRequestDto {
 
+    private Long id;
     private String title;
     private String content;
-    private Category category;
-    private Member author;
+    private Long categoryId;
+    private String categoryName;
+    private Long authorId;
     private Boolean isNotice;
 
     @Builder
-    public ArticleRequestDto(String title, String content, Category category, Member author, byte isNotice) {
+    public ArticleRequestDto(String title, String content, Long categoryId, String categoryName, Long authorId, byte isNotice) {
         this.title = title;
         this.content = content;
-        this.category = category;
-        this.author = author;
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.authorId = authorId;
         this.isNotice = isNotice == 1;
     }
 
-    public Article toEntity() {
-        byte isNotice;
-        if (this.isNotice) {
-            isNotice = 1;
-        }  else {
-            isNotice = 0;
-        }
-        return Article.builder()
-                .title(title)
-                .content(content)
-                .category(category)
-                .author(author)
-                .isNotice(isNotice)
-                .build();
+    public ArticleRequestDto(Article article) {
+        this.id = article.getId();
+        this.title = article.getTitle();
+        this.content = article.getContent();
+        this.categoryId = article.getCategory().getId();
+        this.categoryName = article.getCategory().getName();
+        this.authorId = article.getAuthor().getId();
+        this.isNotice = article.getIsNotice() == 1;
     }
-
 }

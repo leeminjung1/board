@@ -59,22 +59,15 @@ public class Article {
     private Byte isNotice;
 
     @Builder
-    public Article(String title, String content, Category category, Member author, Byte isNotice) {
+    public Article(String title, String content, Category category, Member author, LocalDateTime createdAt, Integer viewCount, Integer likeCount, Byte isNotice) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.author = author;
+        this.createdAt = createdAt;
+        this.viewCount = viewCount;
+        this.likeCount = likeCount;
         this.isNotice = isNotice;
-        this.createdAt = LocalDateTime.now();
-        this.viewCount = 0;
-        this.likeCount = 0;
-    }
-
-    public void updateArticle(ArticleRequestDto dto) {
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
-        this.category = dto.getCategory();
-        this.isNotice = dto.toEntity().getIsNotice();
     }
 
     public void updateViewCount() {

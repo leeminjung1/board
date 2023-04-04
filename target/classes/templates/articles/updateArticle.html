@@ -15,14 +15,14 @@ resize: false
         <div>
             <div class="mb-2">
                 <a class="fs-3"
-                   th:text="${article.category?.name}"
-                   th:href="@{/{categoryId}/ (categoryId=${categoryId})}"></a>
+                   th:text="${article.categoryName}"
+                   th:href="@{/{categoryId}/ (categoryId=${article.categoryId})}"></a>
             </div>
             <div class="mt-2">
                 <h3>글쓰기</h3>
             </div>
             <div class="mt-5">
-                <form method="post" th:action="@{/{categoryId}/update/{articleId} (categoryId=${categoryId}, articleId=${articleId})}" th:object="${article}">
+                <form method="post" th:action="@{/{categoryId}/update/{articleId} (categoryId=${article.categoryId}, articleId=${article.id})}" th:object="${article}">
                     <div class="overflow-auto">
                         <div class="float-start" style="width:900px;">
                             <div class="categoryList">

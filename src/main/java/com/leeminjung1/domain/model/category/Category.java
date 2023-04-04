@@ -39,7 +39,7 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Article> articles = new ArrayList<>();
+    private List<Article> articles;
 
     @Formula("(select count(*) from article a where a.category_id = category_id)")
     private int countOfArticles;

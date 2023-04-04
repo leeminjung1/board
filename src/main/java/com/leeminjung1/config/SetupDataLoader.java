@@ -18,6 +18,7 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -109,18 +110,25 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         categoryRepository.save(category20);
 
         Article article = Article.builder()
-                .author(member)
                 .title("THIS IS TITLE")
                 .content("<p><em><strong>hello!! this is example content:)</strong></em></p>")
                 .category(category0)
+                .author(member)
+                .createdAt(LocalDateTime.now())
+                .viewCount(0)
+                .likeCount(0)
+                .isNotice((byte) 0)
                 .build();
         articleRepository.save(article);
 
         Article article2 = Article.builder()
-                .author(member)
                 .title("test")
                 .content("<p>hello</p><p>world</p>")
                 .category(category0)
+                .author(member)
+                .createdAt(LocalDateTime.now())
+                .viewCount(0)
+                .likeCount(0)
                 .isNotice((byte) 1)
                 .build();
         articleRepository.save(article2);

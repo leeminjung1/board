@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ArticleRepository extends JpaRepository<Article, Long>{
     Page<Article> findByCategoryIdOrderByIdDesc(Pageable pageable, Long categoryId);
     Page<Article> findByAuthorIdOrderByIdDesc(Pageable pageable,Long authorId);
@@ -29,6 +30,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long>{
     void deleteUsersWithIds(List<Long> ids);
 
     @Modifying
-    @Query(value = "update Article a set a.title = :title, a.content = :content, a.is_notice = :isNotice, a.category_id =:categoryId where a.id = :articleId", nativeQuery = true)
+    @Query(value = "update article a set a.title = :title, a.content = :content, a.is_notice = :isNotice, a.category_id =:categoryId where a.id = :articleId", nativeQuery = true)
     void update(Long articleId, String title, String content, Long categoryId, Byte isNotice);
 }

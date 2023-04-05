@@ -39,6 +39,11 @@ public class MemberController {
         return "users/userLogin";
     }
 
+    @PostMapping("/login")
+    public String loginPost() {
+        return "redirect:/";
+    }
+
     /**
      * 회원가입 페이지
      */
